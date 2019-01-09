@@ -44,8 +44,9 @@
                 <a href="{% url 'blog:add_like' pk=post.pk %}">
             {% endif %}
         </p>
-        <span class="glyphicon glyphicon-hand-up larger" style="font-size:3em;"></span>
 
+        <span class="glyphicon glyphicon-hand-up larger" style="font-size:3em;"></span>
+</a>
         <span style="vertical-align:50%"> {{ post.likes.count }}
     </span>
     </div>

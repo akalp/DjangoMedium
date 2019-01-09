@@ -4,7 +4,7 @@ from blog import views
 app_name = 'blog'
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
-    path('/following', views.FollowedView.as_view(), name='following'),
+    path('following', views.FollowedView.as_view(), name='following'),
     path('register/', views.register_user, name='register'),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
@@ -22,7 +22,7 @@ urlpatterns = [
     path('post/<int:pk>/edit/', views.PostEditView.as_view(), name='post_edit'),
     path('post/<int:pk>/like/', views.add_like, name='add_like'),
     path('post/<int:pk>/remove_like/', views.remove_like, name='remove_like'),
-    path('user/<int:pk>/', views.ProfileDetailView.as_view(), name='profile'),
+    path('user/<pk>/', views.ProfileDetailView.as_view(), name='profile'),
 
     path('post/<int:pk>/comment/', views.add_comment, name='add_comment'),
     path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post_delete'),

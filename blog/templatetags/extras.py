@@ -6,7 +6,7 @@ register = template.Library()
 @register.filter
 def already_followed_user(author_pk, user):
     author = CustomUser.objects.get(pk=author_pk)
-    return author in user.profile.following.all()
+    return author in user.following.all()
 
 
 @register.filter

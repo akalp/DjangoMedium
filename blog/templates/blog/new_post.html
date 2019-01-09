@@ -3,7 +3,9 @@
 {% block head %} {{ form.media }} {%endblock %}
 <!-- -->
 {% block featured %}
+    {% if post.image %}
 <img id="featured" src="{{post.image.url}}" alt="" />
+    {% endif %}
 {% endblock %}
 
 

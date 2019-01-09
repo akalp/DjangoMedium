@@ -1,78 +1,77 @@
 {% extends 'blog/base.html' %} {% block content %}
-<!-- -->
+    <!-- -->
 
-<!-- -->
+    <!-- -->
 
-{% block title %} {% endblock %}
+    {% block title %} {% endblock %}
 
-<div class="row">
-    <div class="col-md-8">
-        {% for post in posts_list %}
-        <div class="post">
-            {% if post.image %}
-            <a href="{% url 'blog:post' pk=post.pk %}">
-                <img class="featured-on-index img-responsive" src="{{post.image.url}}" alt="" />
-            </a>{% endif %}
-            <h1>
-                <a href="{% url 'blog:post' pk=post.pk %}">{{post.title|striptags}}</a>
-            </h1>
-            <div class="date">
-                <p>by
-                    <a href="{% url 'blog:profile' pk=post.author.pk %}">{{post.author}}</a> on {{post.created_date|date|striptags}}</p>
-            </div>
-            <div class="tags">
-                <p class="text-muted">
-                    {% for tag in post.tags.all %}
-                    <a href="{% url 'blog:tags' tag=tag %}">{{tag}}</a>
-                    {% empty %} {%endfor%}
-                </p>
-            </div>
-            <div class="snippet">
-                <p>{{post.content|striptags|safe|truncatechars:1000}}</p>
-            </div>
-            <!--
+    <div class="row">
+        <div class="col-md-8">
+            {% if posts_list %}
+                {% for post in posts_list %}
+                    <div class="post">
+                        {% if post.image %}
+                            <a href="{% url 'blog:post' pk=post.pk %}">
+                                <img class="featured-on-index img-responsive" src="{{ post.image.url }}" alt=""/>
+                            </a>{% endif %}
+                        <h1>
+                            <a href="{% url 'blog:post' pk=post.pk %}">{{ post.title|striptags }}</a>
+                        </h1>
+                        <div class="date">
+                            <p>by
+                                <a href="{% url 'blog:profile' pk=post.author.pk %}">{{ post.author }}</a>
+                                on {{ post.created_date|date|striptags }}</p>
+                        </div>
+                        <div class="tags">
+                            <p class="text-muted">
+                                {% for topic in post.topics.all %}
+                                    <a href="{% url 'blog:topics' topic=topic %}">{{ topic }}</a>
+                                {% empty %} {% endfor %}
+                            </p>
+                        </div>
+                        <div class="snippet">
+                            <p>{{ post.content|striptags|safe|truncatechars:1000 }}</p>
+                        </div>
+                        <!--
                     <a href="{% url 'blog:post' pk=post.pk %}">Comments: {{post.approve_comments.count}}</a>
                     -->
-        </div>
-        {% endfor %}
+                    </div>
+                {% endfor %}
 
-        <!-- pagination -->
-        <div class="text-center">
+                <!-- pagination -->
+                <div class="text-center">
 
-            {% if is_paginated %}
-            <ul class="pagination">
-                {% if page_obj.has_previous %}
-                <li>
-                    <a href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
-                </li>
-                {% else %}
-                <li class="disabled">
-                    <span>&laquo;</span>
-                </li>
-                {% endif %} {% for i in paginator.page_range %} {% if page_obj.number == i %}
-                <li class="active">
-                    <span>{{ i }}
-                        <span class="sr-only">(current)</span>
-                    </span>
-                </li>
-
-                {% endif %} {% endfor %} {% if page_obj.has_next %}
-                <li>
-                    <a href="?page={{ page_obj.next_page_number }}">&raquo;</a>
-                </li>
-                {% else %}
-                <li class="disabled">
-                    <span>&raquo;</span>
-                </li>
-                {% endif %}
-            </ul>
+                    {% if is_paginated %}
+                        <ul class="pagination">
+                            {% if page_obj.has_previous %}
+                                <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&laquo;</span></li>
+                            {% endif %}
+                            {% for i in paginator.page_range %}
+                                {% if page_obj.number == i %}
+                                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                {% else %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                                <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&raquo;</span></li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p>There is no post!</p>
             {% endif %}
         </div>
-    </div>
 
-    <div class="col-md-4">
-        {% block sidebar %} {% endblock %}
+        <div class="col-md-4">
+            {% block sidebar %} {% endblock %}
+
+        </div>
 
     </div>
-</div>
 {% endblock %}

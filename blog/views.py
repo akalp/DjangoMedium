@@ -23,24 +23,30 @@ class IndexView(generic.ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        print(Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date'))
         return Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
+
 
 
 class FollowedView(generic.ListView):
     template_name = 'blog/index.html'
-    context_object_name = 'post_list'
+    context_object_name = 'posts_list'
     paginate_by = 10
 
     def get_queryset(self):
-        return self.request.user.followed_post().order_by('-published_date')
+        posts = self.request.user.followed_posts()
+        if posts:
+            return posts
+        else:
+            return Post.objects.none()
 
 
 class TopicPostsListView(generic.ListView):
     template_name = 'blog/topic_posts.html'
-    context_object_name = 'post_list'
+    context_object_name = 'posts_list'
 
     def get_queryset(self):
-        return Post.objects.filter(topics__in=Topic.objects.get(pk=self.kwargs['topic']))
+        return Post.objects.filter(topics__name=self.kwargs['topic'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -137,7 +143,6 @@ def register_user(request):
 
         if user_form.is_valid():
             new_user = user_form.save(commit=False)
-            new_user.set_password(new_user.password)
 
             if 'avatar' in request.FILES:
                 new_user.avatar = request.FILES['avatar']

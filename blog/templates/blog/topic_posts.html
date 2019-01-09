@@ -1,4 +1,5 @@
-{% extends 'blog/base_paginated.html' %}{% load extras %} {% block title %}
+{% extends 'blog/base_paginated.html' %}{% load extras %}
+{% block title %}
 <h1>{{topic}}</h1>
 {% if user.is_authenticated %}
 <!-- -->{% if topic|already_followed_topic:user %}
@@ -6,4 +7,5 @@
 <a href="{% url 'blog:unfollow_topic' topic=topic %}">Unfollow</a>
 <!-- -->{% else %}
 <a href="{% url 'blog:follow_topic' topic=topic %}">Follow</a>
-<!-- -->{% endif %} {% else %} Login to follow {%endif%} {% endblock %}
+<!-- -->{% endif %} {% else %} Login to follow {%endif%}
+{% endblock %}

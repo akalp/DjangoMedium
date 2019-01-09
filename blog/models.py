@@ -36,7 +36,7 @@ class CustomUser(AbstractUser):
     last_name = models.CharField('last name', max_length=150, blank=False)
     email = models.EmailField('email address', blank=False, unique=True)
 
-    birthdate = models.DateField(null=False, blank=False)
+    birthdate = models.DateField(blank=True, null=True)
     avatar = models.ImageField(upload_to='avatars', default='avatars/profile-default.png')
 
     followed_topics = models.ManyToManyField(Topic, related_name='users', blank=True)
@@ -63,7 +63,7 @@ class CustomUser(AbstractUser):
 
         if followed_users.count() >= 1:
             for user in followed_users:
-                q_objects.add(Q(author=user.user), Q.OR)
+                q_objects.add(Q(author=user), Q.OR)
 
         if q_objects:
             posts = Post.objects.filter(

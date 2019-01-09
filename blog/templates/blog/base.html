@@ -45,10 +45,6 @@
                 <a href="{% url 'blog:following' %}">
                     <span>following posts</span>
                 </a>
-                {% if user.profile.avatar %}
-                    <a href="{% url 'blog:me' %}">
-                        <img src="{{ user.profile.avatar.url }}" class="nav-profile-img" width="25px" alt=""> </a>
-                {% endif %}
                 <a href="{% url 'blog:new' %}">
                     <span class="glyphicon glyphicon-plus"></span>
                 </a>
@@ -58,6 +54,10 @@
                 <a href="{% url 'blog:logout' %}">
                     <button class="btn-nav btn-register">Logout</button>
                 </a>
+                {% if user.avatar %}
+                    <a href="{% url 'blog:me' %}">
+                        <img src="{{ user.avatar.url }}" class="nav-profile-img" width="25px" alt=""> </a>
+                {% endif %}
 
             {% else %}
                 <a href="{% url 'blog:login' %}" class="btn-login">Sign in</a>
