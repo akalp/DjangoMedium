@@ -43,9 +43,7 @@ class TopicPostsListView(generic.ListView):
         return Post.objects.filter(topics__in=Topic.objects.get(pk=self.kwargs['topic']))
 
     def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
-        # Add in a QuerySet
         context['topic'] = self.kwargs['topic']
         return context
 
