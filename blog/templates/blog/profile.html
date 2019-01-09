@@ -1,0 +1,56 @@
+{% extends 'blog/base.html' %} {% block content %}
+
+<div class="container">
+    <div class="row">
+        <h1 class="text-center">{{blog_user.username|upper}}
+
+            {% if user.is_authenticated and blog_user == user %}
+        </h1>
+        <p class="text-center">
+            <a href="{% url 'blog:me_edit' %}">Update Profile</a>
+        </p>
+        <h1>
+            {% endif %}
+
+        </h1>
+
+        <div class="col-md-3">
+            <img src="{{blog_user.avatar.url}}" alt="" class="thumbnail img-responsive">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h1 class="text-center">Recent Posts</h1>
+            {% for post in blog_user.recent_posts.all %}
+            <ul>
+                <span class="glyphicon glyphicon-menu-right"></span>
+                <a href="{% url 'blog:post' pk=post.pk %}">{{post.title}}</a>
+            </ul>
+            {% endfor %}
+        </div>
+        <div class="col-md-4">
+            <h1 class="text-center">Recent Comments</h1>
+            {% for comment in blog_user.recent_comments.all %}
+            <ul>
+                <span class="glyphicon glyphicon-menu-right"></span>
+                {{comment.content|truncatechars:20}} on
+                <a href="{% url 'blog:post' pk=comment.post.pk %}"> {{comment.post.title}}</a>
+            </ul>
+            {% endfor %}
+        </div>
+        <div class="col-md-4">
+            <h1 class="text-center">Recent Likes</h1>
+            {% for post in blog_user.recent_likes.all %}
+            <ul>
+                <span class="glyphicon glyphicon-menu-right"></span>
+                <a href="{% url 'blog:post' pk=post.pk %}">{{post.title}}</a>
+            </ul> {% endfor %}
+
+        </div>
+    </div>
+
+
+</div>
+
+{% endblock %}

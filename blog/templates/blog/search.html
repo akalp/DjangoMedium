@@ -1,0 +1,5 @@
+{% extends 'blog/base_paginated.html' %}{% load extras %}
+{% block title %}
+    <h1>Found {{ page_obj.paginator.count }} post{{ page_obj.paginator.count|pluralize }} with
+        '{{ search }}'</h1>
+{% endblock %}
