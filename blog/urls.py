@@ -4,6 +4,7 @@ from blog import views
 app_name = 'blog'
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
+    path('/following', views.FollowedView.as_view(), name='following'),
     path('register/', views.register_user, name='register'),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
