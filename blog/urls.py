@@ -15,10 +15,14 @@ urlpatterns = [
          views.follow_user, name='follow_user'),
     path('unfollow/<author_pk>/<int:post_pk>',
          views.unfollow_user, name='unfollow_user'),
-    path('follow/<author_pk>/',
+    path('follow/<pk>/',
          views.follow_user2, name='follow_user2'),
-    path('unfollow/<author_pk>/',
+    path('unfollow/<pk>/',
          views.unfollow_user2, name='unfollow_user2'),
+    path('block/<pk>/',
+         views.block_user, name='block_user'),
+    path('unblock/<pk>/',
+         views.unblock_user, name='unblock_user'),
 
 
     path('follow/topic/<topic>', views.follow_topic, name='follow_topic'),
@@ -48,6 +52,7 @@ urlpatterns = [
     path('me/edit/', views.profile_edit, name='me_edit'),
     path('me/drafts/', views.DraftsListView.as_view(), name='drafts'),
     path('me/bookmarked/', views.BookmarkedPostListView.as_view(), name='bookmarked'),
+    path('me/blocked/', views.BlockedUserListView.as_view(), name='blockedlist'),
 
     path('me/', views.my_profile, name='me'),
 

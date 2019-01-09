@@ -43,6 +43,8 @@ class CustomUser(AbstractUser):
 
     following = models.ManyToManyField('self', related_name='follows', symmetrical=False, blank=True)
 
+    blocked_users = models.ManyToManyField('self', related_name='blocked_by', symmetrical=False, blank=True)
+
     def recent_posts(self):
         return Post.objects.filter(author=self).order_by('-published_date')
 
@@ -55,6 +57,7 @@ class CustomUser(AbstractUser):
     def followed_posts(self):
         topics = self.followed_topics.all()
         followed_users = self.following.all()
+        blocked_users = self.blocked_users.all()
         q_objects = Q()
 
         if topics.count() >= 1:
@@ -64,6 +67,10 @@ class CustomUser(AbstractUser):
         if followed_users.count() >= 1:
             for user in followed_users:
                 q_objects.add(Q(author=user), Q.OR)
+
+        if blocked_users.count() >= 1:
+            for user in blocked_users:
+                q_objects.add(~Q(author=user), Q.AND)
 
         if q_objects:
             posts = Post.objects.filter(

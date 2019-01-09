@@ -153,6 +153,16 @@ class FollowingListView(generic.ListView):
         return CustomUser.objects.filter(follows__username=self.kwargs['pk'])
 
 
+class BlockedUserListView(generic.ListView):
+    model = CustomUser
+    context_object_name = 'users_list'
+    template_name = 'blog/userlist.html'
+
+    def get_queryset(self):
+        print(self.request.user.pk)
+        return CustomUser.objects.filter(blocked_by=self.request.user)
+
+
 class PostEditView(LoginRequiredMixin, generic.UpdateView):
     login_url = '/login/'
     redirect_field_name = 'blog/post.html'
@@ -300,14 +310,14 @@ def unfollow_user(request, author_pk, post_pk):
 
 
 @login_required
-def follow_user2(request, author_pk):
+def follow_user2(request, pk):
     user = request.user
 
-    follow = CustomUser.objects.get(pk=author_pk)
+    follow = CustomUser.objects.get(pk=pk)
 
     user.following.add(follow)
     user.save()
-    return redirect('blog:profile', pk=author_pk)
+    return redirect('blog:profile', pk=pk)
 
 
 @login_required
@@ -319,6 +329,28 @@ def unfollow_user2(request, author_pk):
     user.following.remove(follow)
     user.save()
     return redirect('blog:profile', pk=author_pk)
+
+
+@login_required
+def block_user(request, pk):
+    user = request.user
+
+    block = CustomUser.objects.get(pk=pk)
+
+    user.blocked_users.add(block)
+    user.save()
+    return redirect('blog:index')
+
+
+@login_required
+def unblock_user(request, pk):
+    user = request.user
+
+    block = CustomUser.objects.get(pk=pk)
+
+    user.blocked_users.remove(block)
+    user.save()
+    return redirect('blog:index')
 
 
 @login_required

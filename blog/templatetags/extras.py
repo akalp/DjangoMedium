@@ -4,8 +4,8 @@ register = template.Library()
 
 
 @register.filter
-def already_followed_user(author_pk, user):
-    author = CustomUser.objects.get(pk=author_pk)
+def already_followed_user(pk, user):
+    author = CustomUser.objects.get(pk=pk)
     return author in user.following.all()
 
 
@@ -27,3 +27,9 @@ def already_liked(post_pk, user):
 def already_bookmarked(post_pk, user):
     post = Post.objects.get(pk=post_pk)
     return user in post.bookmarks.all()
+
+
+@register.filter
+def already_blocked_user(pk, user):
+    block = CustomUser.objects.get(pk=pk)
+    return block in user.blocked_users.all()
