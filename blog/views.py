@@ -281,6 +281,28 @@ def unfollow_user(request, author_pk, post_pk):
 
 
 @login_required
+def follow_user2(request, author_pk):
+    user = request.user
+
+    follow = CustomUser.objects.get(pk=author_pk)
+
+    user.following.add(follow)
+    user.save()
+    return redirect('blog:profile', pk=author_pk)
+
+
+@login_required
+def unfollow_user2(request, author_pk):
+    user = request.user
+
+    follow = CustomUser.objects.get(pk=author_pk)
+
+    user.following.remove(follow)
+    user.save()
+    return redirect('blog:profile', pk=author_pk)
+
+
+@login_required
 def follow_topic(request, topic):
     user = request.user
     user.followed_topics.add(Topic.objects.get(pk=topic))

@@ -1,8 +1,19 @@
-{% extends 'blog/base.html' %} {% block content %}
+{% extends 'blog/base.html' %}{% load extras %} {% block content %}
 
     <div class="container">
         <div class="row">
             <h1 class="text-center">{{ blog_user.username|upper }}</h1>
+
+        {% if user.is_authenticated %} {% if blog_user != user %}
+            {% if blog_user.pk|already_followed_user:user %}
+
+                <a href="{% url 'blog:unfollow_user2' author_pk=blog_user.pk %}">Unfollow</a>
+
+            {% else %}
+                <a href="{% url 'blog:follow_user2' author_pk=blog_user.pk %}">Follow</a>
+            {% endif %} {% endif %} {% else %} Login to follow {% endif %}
+
+
             {% if user.is_authenticated and blog_user == user %}
                 <p class="text-center">
                     <a href="{% url 'blog:me_edit' %}">Update Profile</a>

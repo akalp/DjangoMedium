@@ -10,10 +10,16 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('new/', views.NewPostView.as_view(), name='new'),
     # path('new2/', views.new_post, name='new2'),
+
     path('follow/<author_pk>/<int:post_pk>',
          views.follow_user, name='follow_user'),
     path('unfollow/<author_pk>/<int:post_pk>',
          views.unfollow_user, name='unfollow_user'),
+    path('follow/<author_pk>/',
+         views.follow_user2, name='follow_user2'),
+    path('unfollow/<author_pk>/',
+         views.unfollow_user2, name='unfollow_user2'),
+
     path('follow/topic/<topic>', views.follow_topic, name='follow_topic'),
     path('unfollow/topic/<topic>', views.unfollow_topic, name='unfollow_topic'),
 
