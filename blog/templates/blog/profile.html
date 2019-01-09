@@ -3,15 +3,25 @@
     <div class="container">
         <div class="row">
             <h1 class="text-center">{{ blog_user.username|upper }}</h1>
+            <p class="text-center">
+                {% if user.is_authenticated %} {% if blog_user != user %}
+                    {% if blog_user.pk|already_followed_user:user %}
 
-        {% if user.is_authenticated %} {% if blog_user != user %}
-            {% if blog_user.pk|already_followed_user:user %}
+                        <a href="{% url 'blog:unfollow_user2' author_pk=blog_user.pk %}">Unfollow</a>
 
-                <a href="{% url 'blog:unfollow_user2' author_pk=blog_user.pk %}">Unfollow</a>
-
-            {% else %}
-                <a href="{% url 'blog:follow_user2' author_pk=blog_user.pk %}">Follow</a>
-            {% endif %} {% endif %} {% else %} Login to follow {% endif %}
+                    {% else %}
+                        <a href="{% url 'blog:follow_user2' author_pk=blog_user.pk %}">Follow</a>
+                    {% endif %} {% endif %} {% else %} Login to follow {% endif %}
+            </p>
+            <p class="text-center">
+                <a href="{% url 'blog:follows' pk=blog_user.pk %}">Following </a>
+                <span>{{ blog_user.following.count }}</span><br>
+                <a href="{% url 'blog:followers' pk=blog_user.pk %}">Followers </a>
+                <span>{{ blog_user.follows.count }}</span>
+            </p>
+            <p class="text-center">
+                <a href="{% url 'blog:bookmarked' %}">Bookmarked Posts</a>
+            </p>
 
 
             {% if user.is_authenticated and blog_user == user %}

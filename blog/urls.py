@@ -20,6 +20,7 @@ urlpatterns = [
     path('unfollow/<author_pk>/',
          views.unfollow_user2, name='unfollow_user2'),
 
+
     path('follow/topic/<topic>', views.follow_topic, name='follow_topic'),
     path('unfollow/topic/<topic>', views.unfollow_topic, name='unfollow_topic'),
 
@@ -30,7 +31,11 @@ urlpatterns = [
     path('post/<int:pk>/remove_like/', views.remove_like, name='remove_like'),
     path('post/<int:pk>/add_bookmark/', views.add_bookmark, name='add_bookmark'),
     path('post/<int:pk>/remove_bookmark/', views.remove_bookmark, name='remove_bookmark'),
+
     path('user/<pk>/', views.ProfileDetailView.as_view(), name='profile'),
+
+    path('user/<pk>/followers', views.FollowerListView.as_view(), name='followers'),
+    path('user/<pk>/follows', views.FollowingListView.as_view(), name='follows'),
 
     path('post/<int:pk>/comment/', views.add_comment, name='add_comment'),
     path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post_delete'),

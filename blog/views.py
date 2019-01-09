@@ -125,6 +125,7 @@ class PostDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comment_form'] = CommentForm()
+        context['title'] = self.object.title
         return context
 
 
@@ -132,6 +133,24 @@ class ProfileDetailView(generic.DetailView):
     model = CustomUser
     context_object_name = 'blog_user'
     template_name = 'blog/profile.html'
+
+
+class FollowerListView(generic.ListView):
+    model = CustomUser
+    context_object_name = 'users_list'
+    template_name = 'blog/userlist.html'
+
+    def get_queryset(self):
+        return CustomUser.objects.filter(following__username=self.kwargs['pk'])
+
+
+class FollowingListView(generic.ListView):
+    model = CustomUser
+    context_object_name = 'users_list'
+    template_name = 'blog/userlist.html'
+
+    def get_queryset(self):
+        return CustomUser.objects.filter(follows__username=self.kwargs['pk'])
 
 
 class PostEditView(LoginRequiredMixin, generic.UpdateView):
