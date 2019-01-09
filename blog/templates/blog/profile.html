@@ -18,6 +18,9 @@
                     {% else %}
                         <a href="{% url 'blog:block_user' pk=blog_user.pk %}">Block</a>
                     {% endif %}
+                        {% if blog_user.pk|not_reported_user:user%}
+                        <a href="{% url 'blog:report_user' reported_pk=blog_user.pk %}">Report</a>
+                    {% endif %}
                     {% endif %}
                 {% else %}
                     Login to follow

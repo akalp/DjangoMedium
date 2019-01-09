@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import CustomUser, Post, Comment
+from .models import CustomUser, Post, Comment, UserReport, PostReport
 
 from datetime import datetime
 
@@ -46,3 +46,15 @@ class CommentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CommentForm, self).__init__(*args, **kwargs)
         self.fields['content'].label = "Write a comment:"
+
+
+class UserReportForm(forms.ModelForm):
+    class Meta:
+        model = UserReport
+        fields = ('report_type',)
+
+
+class PostReportForm(forms.ModelForm):
+    class Meta:
+        model = PostReport
+        fields = ('report_type',)

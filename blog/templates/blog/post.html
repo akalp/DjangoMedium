@@ -23,7 +23,15 @@
 
             {% else %}
                 <a href="{% url 'blog:follow_user' author_pk=post.author.pk post_pk=post.pk %}">Follow</a>
-            {% endif %} {% endif %} {% else %} Login to follow {% endif %}
+            {% endif %}
+            {% if post.author.pk|not_reported_user:user %}
+                <a href="{% url 'blog:report_user' reported_pk=post.author.pk %}">Report User</a>
+            {% endif %}
+            {% if post.pk|not_reported_post:user %}
+                <a href="{% url 'blog:report_post' reported_pk=post.pk %}">Report Post</a>
+            {% endif %}
+
+        {% endif %} {% else %} Login to follow {% endif %}
         <br>{% if post.published_date %} on {{ post.published_date|date }}{% endif %}
     </p>
 
@@ -46,7 +54,7 @@
         </p>
 
         <span class="glyphicon glyphicon-hand-up larger" style="font-size:3em;"></span>
-</a>
+        </a>
         <span style="vertical-align:50%"> {{ post.likes.count }}
     </span>
     </div>
@@ -61,7 +69,7 @@
         </p>
 
         <span class="glyphicon glyphicon-bookmark larger" style="font-size:3em;"></span>
-</a>
+        </a>
         <span style="vertical-align:50%"> {{ post.bookmarks.count }}
     </span>
     </div>

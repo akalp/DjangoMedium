@@ -11,19 +11,16 @@ urlpatterns = [
     path('new/', views.NewPostView.as_view(), name='new'),
     # path('new2/', views.new_post, name='new2'),
 
-    path('follow/<author_pk>/<int:post_pk>',
-         views.follow_user, name='follow_user'),
-    path('unfollow/<author_pk>/<int:post_pk>',
-         views.unfollow_user, name='unfollow_user'),
-    path('follow/<pk>/',
-         views.follow_user2, name='follow_user2'),
-    path('unfollow/<pk>/',
-         views.unfollow_user2, name='unfollow_user2'),
-    path('block/<pk>/',
-         views.block_user, name='block_user'),
-    path('unblock/<pk>/',
-         views.unblock_user, name='unblock_user'),
+    path('follow/<author_pk>/<int:post_pk>', views.follow_user, name='follow_user'),
+    path('unfollow/<author_pk>/<int:post_pk>', views.unfollow_user, name='unfollow_user'),
+    path('follow/<pk>/', views.follow_user2, name='follow_user2'),
+    path('unfollow/<pk>/', views.unfollow_user2, name='unfollow_user2'),
 
+    path('block/<pk>/', views.block_user, name='block_user'),
+    path('unblock/<pk>/', views.unblock_user, name='unblock_user'),
+
+    path('report_user/<reported_pk>/', views.report_user, name='report_user'),
+    path('report_post/<int:reported_pk>/', views.report_post, name='report_post'),
 
     path('follow/topic/<topic>', views.follow_topic, name='follow_topic'),
     path('unfollow/topic/<topic>', views.unfollow_topic, name='unfollow_topic'),
@@ -55,7 +52,5 @@ urlpatterns = [
     path('me/blocked/', views.BlockedUserListView.as_view(), name='blockedlist'),
 
     path('me/', views.my_profile, name='me'),
-
-
 
 ]

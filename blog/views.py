@@ -13,7 +13,7 @@ from django.contrib import messages
 from itertools import chain
 import re
 
-from .forms import (UserForm, PostForm, UserEditForm, CommentForm)
+from .forms import (UserForm, PostForm, UserEditForm, CommentForm, UserReportForm, PostReportForm)
 from .models import Post, Comment, Topic, CustomUser
 
 
@@ -208,6 +208,44 @@ def register_user(request):
         'user_form': user_form,
         'registered': registered
     })
+
+
+@login_required
+def report_user(request, reported_pk):
+    if request.method == 'POST':
+        report_form = UserReportForm(data=request.POST)
+
+        if report_form.is_valid():
+            report = report_form.save(commit=False)
+            report.reporter = request.user
+            report.reported = CustomUser.objects.get(pk=reported_pk)
+            report.save()
+            return HttpResponseRedirect(reverse('blog:profile', kwargs={'pk': reported_pk}))
+        else:
+            print(report_form.errors)
+    else:
+        report_form = UserReportForm()
+
+    return render(request, 'blog/report.html', {'report_form': report_form})
+
+
+@login_required
+def report_post(request, reported_pk):
+    if request.method == 'POST':
+        report_form = PostReportForm(data=request.POST)
+
+        if report_form.is_valid():
+            report = report_form.save(commit=False)
+            report.user = request.user
+            report.post = Post.objects.get(pk=reported_pk)
+            report.save()
+            return HttpResponseRedirect(reverse('blog:post', kwargs={'pk': reported_pk}))
+        else:
+            print(report_form.errors)
+    else:
+        report_form = UserReportForm()
+
+    return render(request, 'blog/report.html', {'report_form': report_form})
 
 
 def new_post(request):

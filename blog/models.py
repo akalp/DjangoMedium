@@ -134,3 +134,34 @@ class Comment(models.Model):
         return reverse('post', kwargs={
             'pk': self.pk
         })
+
+
+class ReportType(models.Model):
+    type = models.CharField(max_length=250, blank=False)
+
+    def __str__(self):
+        return self.type
+
+
+class PostReport(models.Model):
+    class Meta:
+        unique_together = (('user', 'post'),)
+
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='report_posts')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    report_type = models.ForeignKey(ReportType, on_delete=models.CASCADE, related_name='reported_posts', blank=False)
+
+    def __str__(self):
+        return str(self.user)+" report "+str(self.post)+" by "+str(self.post.author)+" with "+str(self.report_type)
+
+
+class UserReport(models.Model):
+    class Meta:
+        unique_together = (('reporter', 'reported'),)
+
+    reporter = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='report_users')
+    reported = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    report_type = models.ForeignKey(ReportType, on_delete=models.CASCADE, related_name='reported_users', blank=False)
+
+    def __str__(self):
+        return str(self.reporter)+" report "+str(self.reported)+" with "+str(self.report_type)
