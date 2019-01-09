@@ -44,13 +44,13 @@ class CustomUser(AbstractUser):
     following = models.ManyToManyField('self', related_name='follows', symmetrical=False, blank=True)
 
     def recent_posts(self):
-        return Post.objects.filter(author=self).order_by('-published_date')[:10]
+        return Post.objects.filter(author=self).order_by('-published_date')
 
     def recent_comments(self):
-        return Comment.objects.filter(author=self).order_by('-created_date')[:10]
+        return Comment.objects.filter(author=self).order_by('-created_date')
 
     def recent_likes(self):
-        return Post.objects.filter(likes__in=[self])[:10]
+        return Post.objects.filter(likes__in=[self])
 
     def followed_posts(self):
         topics = self.followed_topics.all()
