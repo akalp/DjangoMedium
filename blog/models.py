@@ -46,7 +46,7 @@ class CustomUser(AbstractUser):
     blocked_users = models.ManyToManyField('self', related_name='blocked_by', symmetrical=False, blank=True)
 
     def recent_posts(self):
-        return Post.objects.filter(author=self).order_by('-published_date')
+        return Post.objects.filter(author=self, published_date__isnull=False).order_by('-published_date')
 
     def recent_comments(self):
         return Comment.objects.filter(author=self).order_by('-created_date')
@@ -74,7 +74,7 @@ class CustomUser(AbstractUser):
 
         if q_objects:
             posts = Post.objects.filter(
-                q_objects).distinct().order_by('-published_date')
+                q_objects, published_date__isnull=False).distinct().order_by('-published_date')
             return posts
         else:
             return False
