@@ -95,6 +95,9 @@ class Post(models.Model):
     likes = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name="post_likes", symmetrical=False, blank=True)
 
+    bookmarks = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name="post_bookmarks", symmetrical=False, blank=True)
+
     def author_string(self):
         return str(self.author)
 

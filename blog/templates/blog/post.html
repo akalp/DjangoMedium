@@ -50,6 +50,21 @@
         <span style="vertical-align:50%"> {{ post.likes.count }}
     </span>
     </div>
+
+    <div class="like">
+        <p>
+            {% if post.pk|already_bookmarked:user %}
+                <a href="{% url 'blog:remove_bookmark' pk=post.pk %}">
+            {% else %}
+                <a href="{% url 'blog:add_bookmark' pk=post.pk %}">
+            {% endif %}
+        </p>
+
+        <span class="glyphicon glyphicon-bookmark larger" style="font-size:3em;"></span>
+</a>
+        <span style="vertical-align:50%"> {{ post.bookmarks.count }}
+    </span>
+    </div>
     <h2>Responses</h2> {% for comment in post.all_comments %}
 
         <div class="panel panel-default comment-container">

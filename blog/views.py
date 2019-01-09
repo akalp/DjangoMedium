@@ -23,9 +23,12 @@ class IndexView(generic.ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        print(Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date'))
         return Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
 
+    def get_context_data(self,  **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Main Page'
+        return context
 
 
 class FollowedView(generic.ListView):
@@ -39,6 +42,25 @@ class FollowedView(generic.ListView):
             return posts
         else:
             return Post.objects.none()
+
+    def get_context_data(self,  **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Timeline'
+        return context
+
+
+class BookmarkedPostListView(generic.ListView):
+    template_name = 'blog/index.html'
+    context_object_name = 'posts_list'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Post.objects.filter(bookmarks__in=[self.request.user]).order_by('-published_date')
+
+    def get_context_data(self,  **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Bookmarked Posts'
+        return context
 
 
 class TopicPostsListView(generic.ListView):
@@ -286,5 +308,20 @@ def add_like(request, pk):
 def remove_like(request, pk):
     post = Post.objects.get(pk=pk)
     post.likes.remove(request.user)
+    post.save()
+    return redirect('blog:post', pk=pk)
+
+@login_required
+def add_bookmark(request, pk):
+    post = Post.objects.get(pk=pk)
+    post.bookmarks.add(request.user)
+    post.save()
+    return redirect('blog:post', pk=pk)
+
+
+@login_required
+def remove_bookmark(request, pk):
+    post = Post.objects.get(pk=pk)
+    post.bookmarks.remove(request.user)
     post.save()
     return redirect('blog:post', pk=pk)

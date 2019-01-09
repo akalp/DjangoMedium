@@ -22,6 +22,8 @@ urlpatterns = [
     path('post/<int:pk>/edit/', views.PostEditView.as_view(), name='post_edit'),
     path('post/<int:pk>/like/', views.add_like, name='add_like'),
     path('post/<int:pk>/remove_like/', views.remove_like, name='remove_like'),
+    path('post/<int:pk>/add_bookmark/', views.add_bookmark, name='add_bookmark'),
+    path('post/<int:pk>/remove_bookmark/', views.remove_bookmark, name='remove_bookmark'),
     path('user/<pk>/', views.ProfileDetailView.as_view(), name='profile'),
 
     path('post/<int:pk>/comment/', views.add_comment, name='add_comment'),
@@ -34,7 +36,10 @@ urlpatterns = [
 
     path('me/edit/', views.profile_edit, name='me_edit'),
     path('me/drafts/', views.DraftsListView.as_view(), name='drafts'),
+    path('me/bookmarked/', views.BookmarkedPostListView.as_view(), name='bookmarked'),
 
     path('me/', views.my_profile, name='me'),
+
+
 
 ]

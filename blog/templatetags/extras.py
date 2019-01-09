@@ -21,3 +21,9 @@ def already_followed_topic(topic, user):
 def already_liked(post_pk, user):
     post = Post.objects.get(pk=post_pk)
     return user in post.likes.all()
+
+
+@register.filter
+def already_bookmarked(post_pk, user):
+    post = Post.objects.get(pk=post_pk)
+    return user in post.bookmarks.all()
