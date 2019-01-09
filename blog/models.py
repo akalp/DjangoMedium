@@ -32,9 +32,9 @@ class CustomUser(AbstractUser):
         },
         primary_key=True,
     )
-    first_name = models.CharField(('first name'), max_length=30, blank=False)
-    last_name = models.CharField(('last name'), max_length=150, blank=False)
-    email = models.EmailField(('email address'), blank=False, unique=True)
+    first_name = models.CharField('first name', max_length=30, blank=False)
+    last_name = models.CharField('last name', max_length=150, blank=False)
+    email = models.EmailField('email address', blank=False, unique=True)
 
     birthdate = models.DateField(null=False, blank=False)
     avatar = models.ImageField(upload_to='avatars', default='avatars/profile-default.png')
@@ -59,7 +59,7 @@ class CustomUser(AbstractUser):
 
         if topics.count() >= 1:
             for topic in topics:
-                q_objects.add(Q(tags__name__in=[topic]), Q.OR)
+                q_objects.add(Q(topics__name__in=[topic]), Q.OR)
 
         if followed_users.count() >= 1:
             for user in followed_users:
@@ -67,7 +67,7 @@ class CustomUser(AbstractUser):
 
         if q_objects:
             posts = Post.objects.filter(
-                q_objects).distinct().order_by(('-published_date'))
+                q_objects).distinct().order_by('-published_date')
             return posts
         else:
             return False
@@ -90,7 +90,7 @@ class Post(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
 
-    tags = models.ManyToManyField(Topic, related_name='topic_posts')
+    topics = models.ManyToManyField(Topic, related_name='topic_posts')
 
     likes = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name="post_likes", symmetrical=False, blank=True)
