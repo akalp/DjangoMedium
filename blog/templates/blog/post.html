@@ -1,4 +1,4 @@
-{% extends 'blog/base.html' %}{% load extras %} {% block content %} {% if post.featured_image %}
+{% extends 'blog/base.html' %}{% load extras %} {% block content %} {% if post.image %}
     <img id="featured" src="{{ post.image.url }}" alt="your image"/>{% else %} {% endif %}
     <h1>{{ post.title }} {% if user.is_authenticated and post.author == user %}
 
