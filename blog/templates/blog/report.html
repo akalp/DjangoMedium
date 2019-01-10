@@ -1,7 +1,7 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-
+    <p><b>{{ info_title }}</b> {{ info }}</p>
     <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-group">

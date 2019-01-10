@@ -25,7 +25,7 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         return Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
 
-    def get_context_data(self,  **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Main Page'
         return context
@@ -43,7 +43,7 @@ class FollowedView(generic.ListView):
         else:
             return Post.objects.none()
 
-    def get_context_data(self,  **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Timeline'
         return context
@@ -57,7 +57,7 @@ class BookmarkedPostListView(generic.ListView):
     def get_queryset(self):
         return Post.objects.filter(bookmarks__in=[self.request.user]).order_by('-published_date')
 
-    def get_context_data(self,  **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Bookmarked Posts'
         return context
@@ -226,7 +226,8 @@ def report_user(request, reported_pk):
     else:
         report_form = UserReportForm()
 
-    return render(request, 'blog/report.html', {'report_form': report_form})
+    return render(request, 'blog/report.html', {'report_form': report_form, 'info_title': 'User:',
+                                                'info': str(CustomUser.objects.get(pk=reported_pk))})
 
 
 @login_required
@@ -245,11 +246,13 @@ def report_post(request, reported_pk):
     else:
         report_form = UserReportForm()
 
-    return render(request, 'blog/report.html', {'report_form': report_form})
+    post = Post.objects.get(pk=reported_pk)
+    author = post.author
+    return render(request, 'blog/report.html',
+                  {'report_form': report_form, 'info_title': 'Post:', 'info': str(post) + " by " + str(author)})
 
 
 def new_post(request):
-
     if request.method == 'POST':
         post_form = PostForm(data=request.POST)
         if post_form.is_valid():
@@ -258,7 +261,6 @@ def new_post(request):
             post.save()
 
             if 'image' in request.FILES:
-
                 post.image = request.FILES['image']
                 post.save()
 
@@ -281,7 +283,7 @@ def user_login(request):
             login(request, user)
             return HttpResponseRedirect(reverse('blog:index'))
         else:
-            messages.error(request,'username or password not correct')
+            messages.error(request, 'username or password not correct')
             return HttpResponseRedirect(reverse('blog:login'))
     else:
         return render(request, 'blog/login.html')
@@ -302,7 +304,6 @@ def user_logout(request):
 
 @login_required
 def profile_edit(request):
-
     if request.method == 'POST':
         user_form = UserEditForm(data=request.POST, instance=request.user)
         if 'avatar' in request.FILES:
@@ -421,6 +422,7 @@ def remove_like(request, pk):
     post.likes.remove(request.user)
     post.save()
     return redirect('blog:post', pk=pk)
+
 
 @login_required
 def add_bookmark(request, pk):
