@@ -60,7 +60,7 @@ class PostReportForm(forms.ModelForm):
         fields = ('report_type',)
 
 
-class CollectionCreationForm(forms.ModelForm):
+class CollectionForm(forms.ModelForm):
     class Meta:
         model = Collection
         fields = ('image', 'title', 'info',)
@@ -69,3 +69,4 @@ class CollectionCreationForm(forms.ModelForm):
             'title': forms.Textarea(attrs={'class': 'post-title-input', 'placeholder': 'Title'}),
             'info': forms.TextInput(),
         }
+

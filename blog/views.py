@@ -13,7 +13,7 @@ from django.contrib import messages
 from itertools import chain
 import re
 
-from .forms import UserForm, PostForm, UserEditForm, CommentForm, UserReportForm, PostReportForm, CollectionCreationForm
+from .forms import UserForm, PostForm, UserEditForm, CommentForm, UserReportForm, PostReportForm, CollectionForm
 from .models import Post, Comment, Topic, CustomUser, Collection
 
 
@@ -504,7 +504,7 @@ class CollectionCreateView(LoginRequiredMixin, generic.CreateView):
     login_url = '/login/'
     redirect_field_name = 'blog/collection.html'
     template_name = 'blog/new_collection.html'
-    form_class = CollectionCreationForm
+    form_class = CollectionForm
     model = Collection
 
     def form_valid(self, form):
@@ -516,7 +516,7 @@ class CollectionEditView(LoginRequiredMixin, generic.UpdateView):
     login_url = '/login/'
     redirect_field_name = 'blog/collection.html'
     template_name = 'blog/new_collection.html'
-    form_class = CollectionCreationForm
+    form_class = CollectionForm
     model = Collection
 
 
