@@ -108,6 +108,11 @@ class ProfileDetailView(generic.DetailView):
     context_object_name = 'blog_user'
     template_name = 'blog/profile.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['collections'] = self.object.collections.filter(published_date__isnull=False)
+        return context
+
 
 class FollowerListView(generic.ListView):
     model = CustomUser
@@ -138,7 +143,8 @@ class BlockedUserListView(generic.ListView):
 
 
 def my_profile(request):
-    return render(request, 'blog/profile.html', {'blog_user': request.user})
+    collections = request.user.collections.filter(published_date__isnull=False)
+    return render(request, 'blog/profile.html', {'blog_user': request.user, 'collections': collections})
 
 
 def register_user(request):

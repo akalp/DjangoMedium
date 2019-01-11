@@ -74,7 +74,7 @@
             </div>
         <div class="col-md-3">
                 <h1 class="text-center">Collections</h1>
-                {% for collection in blog_user.collections.all %}
+                {% for collection in collections %}
                     <ul>
                         <span class="glyphicon glyphicon-menu-right"></span>
                         <a href="{% url 'blog:collection' pk=collection.pk %}">{{ collection.title }}</a>
