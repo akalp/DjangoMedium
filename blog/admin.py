@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Post, Comment, Topic, ReportType, UserReport, PostReport, Collection
+from .models import CustomUser, Post, Comment, Topic, ReportType, UserReport, PostReport, Collection, PublicationPost, Publication
 
 admin.site.register(CustomUser, UserAdmin)
 admin.site.register(Post)
@@ -10,3 +10,5 @@ admin.site.register(ReportType)
 admin.site.register(UserReport)
 admin.site.register(PostReport)
 admin.site.register(Collection)
+admin.site.register(Publication)
+admin.site.register(PublicationPost)

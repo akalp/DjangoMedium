@@ -198,3 +198,33 @@ class Collection(models.Model):
 
     def get_absolute_url(self):
         return reverse('blog:collection', kwargs={'pk': self.pk})
+
+
+class Publication(models.Model):
+    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='publications')
+
+    authors = models.ManyToManyField(CustomUser, related_name='writable_publications')
+
+    name = models.CharField(max_length=200, blank=False)
+
+    image = models.ImageField(upload_to='publications', blank=True)
+
+    info = models.CharField(max_length=255, blank=True)
+
+    followers = models.ManyToManyField(CustomUser, related_name='followed_publications', blank=True)
+
+    published_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('blog:publication', kwargs={'pk': self.pk})
+
+
+class PublicationPost(models.Model):
+    post = models.OneToOneField(Post, on_delete=models.CASCADE, related_name='publication', primary_key=True)
+    publication = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name='posts')
+
+    def __str__(self):
+        return self.publication.name
