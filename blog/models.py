@@ -227,4 +227,4 @@ class PublicationPost(models.Model):
     publication = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name='posts')
 
     def __str__(self):
-        return self.publication.name
+        return self.post.title

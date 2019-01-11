@@ -14,7 +14,7 @@ from itertools import chain
 import re
 
 from .forms import UserForm, PostForm, UserEditForm, CommentForm, UserReportForm, PostReportForm, CollectionForm
-from .models import Post, Comment, Topic, CustomUser, Collection
+from .models import Post, Comment, Topic, CustomUser, Collection, Publication, PublicationPost
 
 
 class IndexView(generic.ListView):
@@ -319,14 +319,16 @@ def unfollow_topic(request, topic):
 
 class NewPostView(LoginRequiredMixin, generic.CreateView):
     login_url = '/login/'
-    redirect_field_name = 'blog/post.html'
     template_name = 'blog/new_post.html'
     form_class = PostForm
     model = Post
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        post = form.save()
+        if self.kwargs['publication_pk']:
+            PublicationPost(post_id=post.id, publication_id=self.kwargs['publication_pk']).save()
+        return HttpResponseRedirect(reverse('blog:post', kwargs={'pk': post.pk}))
 
 
 class PostDeleteView(LoginRequiredMixin, generic.DeleteView):
