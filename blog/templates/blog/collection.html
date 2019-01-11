@@ -45,6 +45,12 @@
                         <div class="snippet">
                             <p>{{ post.content|striptags|safe|truncatechars:1000 }}</p>
                         </div>
+                        {% if user.is_authenticated and collection.creator == user and collection.published_date is None %}
+                            <a href="{% url 'blog:remove_from_collection' post_pk=post.pk collection_pk=collection.pk %}">remove post from collection</a>
+                        {% endif %}
+                        <div>
+
+                        </div>
                     </div>
                 {% endfor %}
     </div>

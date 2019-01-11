@@ -65,7 +65,8 @@ urlpatterns = [
     path('collections/<int:pk>/publish/', views.collection_publish, name='collection_publish'),
 
     path('add_to_collection/<int:post_pk>/<int:collection_pk>', views.add_post_to_collection, name='add_to_collection'),
-    path('add_to_collection/<int:post_pk>/', views.SelectCollectionsListView.as_view(), name='select_collection'),
+    path('select_collection/<int:post_pk>/', views.SelectCollectionsListView.as_view(), name='select_collection'),
+    path('remove_from_collection/<int:post_pk>/<int:collection_pk>', views.remove_post_from_collection, name='remove_from_collection'),
 
     path('collections/new/', views.CollectionCreateView.as_view(), name='new_collection'),
 

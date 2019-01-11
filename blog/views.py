@@ -551,6 +551,14 @@ def add_post_to_collection(request, post_pk, collection_pk):
 
 
 @login_required
+def remove_post_from_collection(request, post_pk, collection_pk):
+    collection = Collection.objects.get(pk=collection_pk)
+    collection.posts.remove(Post.objects.get(pk=post_pk))
+    collection.save()
+    return redirect('blog:collection', pk=collection_pk)
+
+
+@login_required
 def collection_publish(request, pk):
     collection = get_object_or_404(Collection, pk=pk)
     collection.publish()

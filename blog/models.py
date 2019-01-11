@@ -185,7 +185,7 @@ class Collection(models.Model):
     bookmarked_by = models.ManyToManyField(CustomUser, related_name='collection_bookmarks',
                                            blank=True)
 
-    posts = models.ManyToManyField(Post, blank=True)
+    posts = models.ManyToManyField(Post, blank=True, related_name='collections')
 
     published_date = models.DateTimeField(blank=True, null=True)
 
