@@ -1,0 +1,67 @@
+{% extends 'blog/base.html' %}{% load extras %} {% block content %} {% if collection.image %}
+    <img id="featured" src="{{ collection.image.url }}" alt="your image"/>{% else %} {% endif %}
+    <h1>{{ collection.title }} {% if user.is_authenticated and collection.creator == user %}
+
+        <span class="collection-edit-publish-links">
+        <a href="{% url 'blog:collection_edit' pk=collection.pk %}">Edit</a> |
+        <a href="{% url 'blog:collection_delete' pk=collection.pk %}">Delete</a>
+
+            {% if not collection.published_date %} |
+                <a href="{% url 'blog:collection_publish' pk=collection.pk %}">Publish</a>
+
+                </span>{% endif %} {% endif %}
+
+    </h1>
+
+    <p>by
+        <a href="{% url 'blog:profile' pk=collection.creator.pk %}">{{ collection.creator }}</a>
+
+        <br>{% if collection.published_date %} on {{ collection.published_date|date }}{% endif %}
+    </p>
+
+
+    <div class="container">
+        {% for post in collection.posts.all %}
+                    <div class="post">
+                        {% if post.image %}
+                            <a href="{% url 'blog:post' pk=post.pk %}">
+                                <img class="featured-on-index img-responsive" src="{{ post.image.url }}" alt=""/>
+                            </a>{% endif %}
+                        <h1>
+                            <a href="{% url 'blog:post' pk=post.pk %}">{{ post.title|striptags }}</a>
+                        </h1>
+                        <div class="date">
+                            <p>by
+                                <a href="{% url 'blog:profile' pk=post.author.pk %}">{{ post.author }}</a>
+                                on {{ post.created_date|date|striptags }}</p>
+                        </div>
+                        <div class="tags">
+                            <p class="text-muted">
+                                {% for topic in post.topics.all %}
+                                    <a href="{% url 'blog:topics' topic=topic %}">{{ topic }}</a>
+                                {% empty %} {% endfor %}
+                            </p>
+                        </div>
+                        <div class="snippet">
+                            <p>{{ post.content|striptags|safe|truncatechars:1000 }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+    </div>
+
+
+    <div class="like">
+        <p>
+            {% if collection.pk|already_bookmarked_collection:user %}
+                <a href="{% url 'blog:remove_bookmark_collection' pk=collection.pk %}">
+            {% else %}
+                <a href="{% url 'blog:add_bookmark_collection' pk=collection.pk %}">
+            {% endif %}
+        </p>
+
+        <span class="glyphicon glyphicon-bookmark larger" style="font-size:3em;"></span>
+        </a>
+        <span style="vertical-align:50%"> {{ collection.bookmarked_by.count }}
+    </span>
+    </div>
+    {% endblock %}

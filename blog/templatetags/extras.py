@@ -1,5 +1,5 @@
 from django import template
-from blog.models import CustomUser, Post, PostReport, UserReport
+from blog.models import CustomUser, Post, PostReport, UserReport, Collection
 register = template.Library()
 
 
@@ -24,7 +24,7 @@ def already_liked(post_pk, user):
 
 
 @register.filter
-def already_bookmarked(post_pk, user):
+def already_bookmarked_post(post_pk, user):
     post = Post.objects.get(pk=post_pk)
     return user in post.bookmarks.all()
 
@@ -37,7 +37,6 @@ def already_blocked_user(pk, user):
 
 @register.filter
 def not_reported_user(pk, user):
-    reported = CustomUser.objects.get(pk=pk)
     if UserReport.objects.filter(reporter=user, reported__pk=pk).count() > 0:
         return False
     return True
@@ -45,7 +44,13 @@ def not_reported_user(pk, user):
 
 @register.filter
 def not_reported_post(pk, user):
-    reported = Post.objects.get(pk=pk)
     if PostReport.objects.filter(user=user, post__pk=pk).count() > 0:
         return False
     return True
+
+
+@register.filter
+def already_bookmarked_collection(collection_pk, user):
+    collection = Collection.objects.get(pk=collection_pk)
+    return user in collection.bookmarked_by.all()
+

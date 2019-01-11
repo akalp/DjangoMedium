@@ -42,8 +42,18 @@
                     <a href="{% url 'blog:bookmarked' %}">Bookmarked Posts</a>
                 </p>
                 <p class="text-center">
+                    <a href="{% url 'blog:bookmarked_collections' %}">Bookmarked Collections</a>
+                </p>
+                <p class="text-center">
                     <a href="{% url 'blog:blockedlist' %}">Blocked Users</a>
                 </p>
+                <p class="text-center">
+                    <a href="{% url 'blog:new_collection' %}">Create Collection</a>
+                </p>
+                <p class="text-center">
+                    <a href="{% url 'blog:draft_collections' %}">Draft Collections</a>
+                </p>
+
             {% endif %}
 
 
@@ -53,7 +63,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <h1 class="text-center">Recent Posts</h1>
                 {% for post in blog_user.recent_posts.all %}
                     <ul>
@@ -62,7 +72,16 @@
                     </ul>
                 {% endfor %}
             </div>
-            <div class="col-md-4">
+        <div class="col-md-3">
+                <h1 class="text-center">Collections</h1>
+                {% for collection in blog_user.collections.all %}
+                    <ul>
+                        <span class="glyphicon glyphicon-menu-right"></span>
+                        <a href="{% url 'blog:collection' pk=collection.pk %}">{{ collection.title }}</a>
+                    </ul>
+                {% endfor %}
+            </div>
+            <div class="col-md-3">
                 <h1 class="text-center">Recent Comments</h1>
                 {% for comment in blog_user.recent_comments.all %}
                     <ul>
@@ -72,7 +91,7 @@
                     </ul>
                 {% endfor %}
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <h1 class="text-center">Recent Likes</h1>
                 {% for post in blog_user.recent_likes.all %}
                     <ul>

@@ -1,0 +1,23 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    {% for collection in collection_list %}
+        <div class="collection">
+                        {% if collection.image %}
+                            <a href="{% url 'blog:collection' pk=collection.pk %}">
+                                <img class="featured-on-index img-responsive" src="{{ collection.image.url }}" alt=""/>
+                            </a>{% endif %}
+                        <h1>
+                            <a href="{% url 'blog:collection' pk=collection.pk %}">{{ collection.title|striptags }}</a>
+                        </h1>
+                        <div class="date">
+                            <p>by
+                                <a href="{% url 'blog:profile' pk=collection.creator.pk %}">{{ collection.creator }}</a>
+                                on {{ collection.published_date|date|striptags }}</p>
+                        </div>
+                        <div class="snippet">
+                            <p>{{ collection.info|striptags|safe|truncatechars:1000 }}</p>
+                        </div>
+                    </div>
+    {% endfor %}
+{% endblock %}

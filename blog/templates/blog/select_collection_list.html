@@ -1,0 +1,18 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    {% for collection in collection_list %}
+        <div class="collection">
+                        {% if collection.image %}
+                            <a href="{% url 'blog:add_to_collection' collection_pk=collection.pk post_pk=post %}">
+                                <img class="featured-on-index img-responsive" src="{{ collection.image.url }}" alt=""/>
+                            </a>{% endif %}
+                        <h1>
+                            <a href="{% url 'blog:add_to_collection' post_pk=post collection_pk=collection.pk %}">{{ collection.title|striptags }}</a>
+                        </h1>
+                        <div class="snippet">
+                            <p>{{ collection.info|striptags|safe|truncatechars:1000 }}</p>
+                        </div>
+                    </div>
+    {% endfor %}
+{% endblock %}

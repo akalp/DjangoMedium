@@ -85,6 +85,11 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
+    def draft_collections(self):
+        if Collection.objects.get(creator=self, published_date__isnull=True):
+            return True
+        return False
+
 
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -100,10 +105,10 @@ class Post(models.Model):
     topics = models.ManyToManyField(Topic, related_name='topic_posts')
 
     likes = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, related_name="post_likes", symmetrical=False, blank=True)
+        settings.AUTH_USER_MODEL, related_name="post_likes", blank=True)
 
     bookmarks = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, related_name="post_bookmarks", symmetrical=False, blank=True)
+        settings.AUTH_USER_MODEL, related_name="post_bookmarks", blank=True)
 
     def author_string(self):
         return str(self.author)
@@ -152,7 +157,8 @@ class PostReport(models.Model):
     report_type = models.ForeignKey(ReportType, on_delete=models.CASCADE, related_name='reported_posts', blank=False)
 
     def __str__(self):
-        return str(self.user)+" report "+str(self.post)+" by "+str(self.post.author)+" with "+str(self.report_type)
+        return str(self.user) + " report " + str(self.post) + " by " + str(self.post.author) + " with " + str(
+            self.report_type)
 
 
 class UserReport(models.Model):
@@ -164,4 +170,31 @@ class UserReport(models.Model):
     report_type = models.ForeignKey(ReportType, on_delete=models.CASCADE, related_name='reported_users', blank=False)
 
     def __str__(self):
-        return str(self.reporter)+" report "+str(self.reported)+" with "+str(self.report_type)
+        return str(self.reporter) + " report " + str(self.reported) + " with " + str(self.report_type)
+
+
+class Collection(models.Model):
+    title = models.CharField(max_length=200, blank=False)
+
+    image = models.ImageField(upload_to='collections', blank=True)
+
+    info = models.CharField(max_length=255, blank=True)
+
+    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="collections")
+
+    bookmarked_by = models.ManyToManyField(CustomUser, related_name='collection_bookmarks',
+                                           blank=True)
+
+    posts = models.ManyToManyField(Post, blank=True)
+
+    published_date = models.DateTimeField(blank=True, null=True)
+
+    def publish(self):
+        self.published_date = timezone.now()
+        self.save()
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('blog:collection', kwargs={'pk': self.pk})

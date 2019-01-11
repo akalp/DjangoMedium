@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import CustomUser, Post, Comment, UserReport, PostReport
+from .models import CustomUser, Post, Comment, UserReport, PostReport, Collection
 
 from datetime import datetime
 
@@ -58,3 +58,14 @@ class PostReportForm(forms.ModelForm):
     class Meta:
         model = PostReport
         fields = ('report_type',)
+
+
+class CollectionCreationForm(forms.ModelForm):
+    class Meta:
+        model = Collection
+        fields = ('image', 'title', 'info',)
+
+        widgets = {
+            'title': forms.Textarea(attrs={'class': 'post-title-input', 'placeholder': 'Title'}),
+            'info': forms.TextInput(),
+        }

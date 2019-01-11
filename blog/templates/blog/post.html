@@ -12,7 +12,9 @@
                 </span>{% endif %} {% endif %}
 
     </h1>
-
+    {% if user.draft_collections %}
+    <a href="{% url 'blog:select_collection' post_pk=post.pk %}">add to collection</a>
+    {% endif %}
     <p>by
         <a href="{% url 'blog:profile' pk=post.author.pk %}">{{ post.author }}</a>
 
@@ -61,7 +63,7 @@
 
     <div class="like">
         <p>
-            {% if post.pk|already_bookmarked:user %}
+            {% if post.pk|already_bookmarked_post:user %}
                 <a href="{% url 'blog:remove_bookmark' pk=post.pk %}">
             {% else %}
                 <a href="{% url 'blog:add_bookmark' pk=post.pk %}">

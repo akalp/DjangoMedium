@@ -22,8 +22,8 @@ urlpatterns = [
     path('report_user/<reported_pk>/', views.report_user, name='report_user'),
     path('report_post/<int:reported_pk>/', views.report_post, name='report_post'),
 
-    path('follow/topic/<topic>', views.follow_topic, name='follow_topic'),
-    path('unfollow/topic/<topic>', views.unfollow_topic, name='unfollow_topic'),
+    path('follow/topic/<topic>/', views.follow_topic, name='follow_topic'),
+    path('unfollow/topic/<topic>/', views.unfollow_topic, name='unfollow_topic'),
 
     path('post/<int:pk>/', views.PostDetailView.as_view(), name='post'),
     path('search/', views.SearchListView.as_view(), name='search'),
@@ -35,8 +35,8 @@ urlpatterns = [
 
     path('user/<pk>/', views.ProfileDetailView.as_view(), name='profile'),
 
-    path('user/<pk>/followers', views.FollowerListView.as_view(), name='followers'),
-    path('user/<pk>/follows', views.FollowingListView.as_view(), name='follows'),
+    path('user/<pk>/followers/', views.FollowerListView.as_view(), name='followers'),
+    path('user/<pk>/follows/', views.FollowingListView.as_view(), name='follows'),
 
     path('post/<int:pk>/comment/', views.add_comment, name='add_comment'),
     path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post_delete'),
@@ -52,5 +52,22 @@ urlpatterns = [
     path('me/blocked/', views.BlockedUserListView.as_view(), name='blockedlist'),
 
     path('me/', views.my_profile, name='me'),
+
+    path('me/draft_collections/', views.DraftCollectionsListView.as_view(), name='draft_collections'),
+    path('me/bookmarked_collections/', views.BookmarkedCollectionsListView.as_view(), name='bookmarked_collections'),
+
+    path('collections/', views.CollectionsListView.as_view(), name='collections'),
+    path('collections/<int:pk>/', views.CollectionDetailView.as_view(), name='collection'),
+    path('collections/<int:pk>/add_bookmark/', views.add_bookmark_collection, name='add_bookmark_collection'),
+    path('collections/<int:pk>/remove_bookmark/', views.remove_bookmark_collection, name='remove_bookmark_collection'),
+    path('collections/<int:pk>/edit/', views.CollectionEditView.as_view(), name='collection_edit'),
+    path('collections/<int:pk>/delete/', views.CollectionDeleteView.as_view(), name='collection_delete'),
+    path('collections/<int:pk>/publish/', views.collection_publish, name='collection_publish'),
+
+    path('add_to_collection/<int:post_pk>/<int:collection_pk>', views.add_post_to_collection, name='add_to_collection'),
+    path('add_to_collection/<int:post_pk>/', views.SelectCollectionsListView.as_view(), name='select_collection'),
+
+    path('collections/new/', views.CollectionCreateView.as_view(), name='new_collection'),
+
 
 ]
