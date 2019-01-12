@@ -58,5 +58,7 @@ def already_bookmarked_collection(collection_pk, user):
 @register.filter
 def already_followed_publication(pk, user):
     publication = Publication.objects.get(pk=pk)
+    if user.is_anonymous:
+        return False
     return publication in user.followed_publications.all()
 
