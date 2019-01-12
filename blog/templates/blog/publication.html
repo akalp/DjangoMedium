@@ -1,0 +1,66 @@
+{% extends 'blog/base.html' %}{% load extras %} {% block content %} 
+    
+    
+    {% if publication.image %}
+    <img id="featured" src="{{ publication.image.url }}" alt="your image"/>{% else %} {% endif %}
+    <h1>{{ publication.name }} 
+        
+        {% if user.is_authenticated and publication.creator == user %}
+        <span class="collection-edit-publish-links">
+        <a href="{% url 'blog:edit_publication' pk=publication.pk %}">Edit</a> |
+        <a href="{% url 'blog:delete_publication' pk=publication.pk %}">Delete</a>
+        </span> 
+        {% endif %}
+    </h1>
+    <div class="like">
+            {% if publication.pk|already_followed_publication:user %}
+                <a href="{% url 'blog:unfollow_publication' publication_pk=publication.pk %}">Unfollow
+            {% else %}
+                <a href="{% url 'blog:follow_publication' publication_pk=publication.pk %}">Follow
+            {% endif %}
+
+        </a>
+        <span> {{ publication.followers.count }}</span>
+    </div>
+
+    <p>by
+        <a href="{% url 'blog:profile' pk=publication.creator.pk %}">{{ publication.creator }}</a>
+        <br>{% if publication.published_date %} on {{ publication.published_date|date }}{% endif %}
+    </p>
+
+
+    <div class="container">
+        {% for post in publication.posts.all reversed %}
+            <div class="post">
+                {% if post.post.image %}
+                    <a href="{% url 'blog:post' pk=post.post.pk %}">
+                        <img class="featured-on-index img-responsive" src="{{ post.post.image.url }}" alt=""/>
+                    </a>{% endif %}
+                <h1>
+                    <a href="{% url 'blog:post' pk=post.post.pk %}">{{ post.post.title|striptags }}</a>
+                </h1>
+                <div class="date">
+                    <p>by
+                        <a href="{% url 'blog:profile' pk=post.post.author.pk %}">{{ post.post.author }}</a>
+                        on {{ post.post.created_date|date|striptags }}</p>
+                </div>
+                <div class="tags">
+                    <p class="text-muted">
+                        {% for topic in post.post.topics.all %}
+                            <a href="{% url 'blog:topics' topic=topic %}">{{ topic }}</a>
+                        {% empty %} {% endfor %}
+                    </p>
+                </div>
+                <div class="snippet">
+                    <p>{{ post.post.content|striptags|safe|truncatechars:1000 }}</p>
+                </div>
+                <div>
+
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+
+{% endblock %}

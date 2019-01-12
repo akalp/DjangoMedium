@@ -70,17 +70,21 @@ urlpatterns = [
 
     path('collections/new/', views.CollectionCreateView.as_view(), name='new_collection'),
 
-    # path('publications/', views.PublicationsListView.as_view(), name='publications'),
-    # path('publication/<int:pk>/', views.PublicationDetailView.as_view(), name='publication'),
-    # path('publication/<int:pk>/follow/', views.follow_publication, name='follow_publication'),
-    # path('publication/<int:pk>/unfollow/', views.unfollow_publication, name='unfollow_publication'),
-    # path('publication/<int:pk>/edit/', views.PublicationChangeView.as_view(), name='edit_publication'),
-    # path('publications/new/', views.PublicationCreateView.as_view(), name='new_publication'),
+    path('publications/', views.PublicationsListView.as_view(), name='publications'),
+    path('publication/<int:pk>/', views.PublicationDetailView.as_view(), name='publication'),
+    path('publication/<int:publication_pk>/follow/', views.follow_publication, name='follow_publication'),
+    path('publication/<int:publication_pk>/unfollow/', views.unfollow_publication, name='unfollow_publication'),
+    path('publication/<int:pk>/edit/', views.PublicationChangeView.as_view(), name='edit_publication'),
+    path('publication/<int:pk>/delete/', views.PublicationDeleteView.as_view(), name='delete_publication'),
+    path('publications/new/', views.PublicationCreateView.as_view(), name='new_publication'),
 
     path('publication/<int:publication_pk>/new', views.NewPostView.as_view(), name='collection_new_post'),
 
-    # path('user/<pk>/publications/', views.UserPublicationsListView.as_view(), name='user_publications'),
-    # path('user/<pk>/followed_publications/', views.FollowedPublications.as_view(), name='followed_publications'),
+    path('user/<pk>/publications/', views.UserPublicationsListView.as_view(), name='user_publications'),
+    path('me/followed_publications/', views.FollowedPublicationsListView.as_view(), name='followed_publications'),
 
+    path('publication/<int:publication_pk>/add_author/', views.publicationaddauthor, name='add_author'),
+    path('publication/<int:publication_pk>/leave_author/<user_pk>', views.publicationremoveauthor, name='remove_author'),
 
+    path('publication/<int:publication_pk>/authors', views.PublicationAuthorListView.as_view(), name='author_list'),
 ]

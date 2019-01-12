@@ -13,7 +13,7 @@ from django.contrib import messages
 from itertools import chain
 import re
 
-from .forms import UserForm, PostForm, UserEditForm, CommentForm, UserReportForm, PostReportForm, CollectionForm
+from .forms import UserForm, PostForm, UserEditForm, CommentForm, UserReportForm, PostReportForm, CollectionForm, PublicationForm
 from .models import Post, Comment, Topic, CustomUser, Collection, Publication, PublicationPost
 
 
@@ -264,14 +264,14 @@ def follow_user2(request, pk):
 
 
 @login_required
-def unfollow_user2(request, author_pk):
+def unfollow_user2(request, pk):
     user = request.user
 
-    follow = CustomUser.objects.get(pk=author_pk)
+    follow = CustomUser.objects.get(pk=pk)
 
     user.following.remove(follow)
     user.save()
-    return redirect('blog:profile', pk=author_pk)
+    return redirect('blog:profile', pk=pk)
 
 
 @login_required
@@ -569,4 +569,123 @@ def collection_publish(request, pk):
 
 # Publication #
 
-# TODO publication views
+class PublicationsListView(generic.ListView):
+    template_name = 'blog/publication_list.html'
+    context_object_name = 'publication_list'
+
+    def get_queryset(self):
+        return Publication.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
+
+
+class PublicationDetailView(generic.DetailView):
+    model = Publication
+    template_name = 'blog/publication.html'
+
+
+class PublicationCreateView(LoginRequiredMixin, generic.CreateView):
+    login_url = '/login/'
+    redirect_field_name = 'blog/publication.html'
+    template_name = 'blog/new_publication.html'
+    form_class = PublicationForm
+    model = Publication
+
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        pub = form.save()
+        pub.authors.add(self.request.user)
+        return super().form_valid(form)
+
+
+class PublicationDeleteView(LoginRequiredMixin, generic.DeleteView):
+    login_url = '/login/'
+    model = Publication
+    success_url = reverse_lazy('blog:index')
+
+
+class PublicationChangeView(LoginRequiredMixin, generic.UpdateView):
+    login_url = '/login/'
+    redirect_field_name = 'blog/publication.html'
+    template_name = 'blog/new_publication.html'
+    form_class = PublicationForm
+    model = Publication
+
+
+class UserPublicationsListView(generic.ListView):
+    template_name = 'blog/publication_list.html'
+    context_object_name = 'publication_list'
+
+    def get_queryset(self):
+        return self.request.user.publications.all()
+
+
+class FollowedPublicationsListView(generic.ListView):
+    template_name = 'blog/publication_list.html'
+    context_object_name = 'publication_list'
+
+    def get_queryset(self):
+        return self.request.user.followed_publications.all()
+
+
+class PublicationAuthorListView(LoginRequiredMixin, generic.ListView):
+    login_url = '/login/'
+    template_name = 'blog/author_list.html'
+    context_object_name = 'author_list'
+
+    def get_queryset(self):
+        return Publication.objects.get(pk=self.kwargs['publication_pk']).authors.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['publication_pk'] = self.kwargs['publication_pk']
+        context['creator_pk'] = Publication.objects.get(pk=context['publication_pk']).creator.username
+        return context
+
+
+@login_required
+def follow_publication(request, publication_pk):
+    user = request.user
+
+    follow = Publication.objects.get(pk=publication_pk)
+
+    user.followed_publications.add(follow)
+    user.save()
+    return redirect('blog:publication', pk=publication_pk)
+
+
+@login_required
+def unfollow_publication(request, publication_pk):
+    user = request.user
+
+    follow = Publication.objects.get(pk=publication_pk)
+
+    user.followed_publications.remove(follow)
+    user.save()
+    return redirect('blog:publication', pk=publication_pk)
+
+@login_required
+def publicationaddauthor(request, publication_pk):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        try:
+            user = CustomUser.objects.get(pk=username)
+            Publication.objects.get(pk=publication_pk).authors.add(user)
+            messages.success(request, "{} is added".format(username))
+            return HttpResponseRedirect(reverse('blog:add_author', kwargs={'publication_pk':publication_pk}))
+        except:
+            messages.error(request, 'user is not found')
+            return HttpResponseRedirect(reverse('blog:add_author', kwargs={'publication_pk':publication_pk}))
+    else:
+        return render(request, 'blog/addauthor.html', {'publication_pk':publication_pk})
+
+
+@login_required
+def publicationremoveauthor(request, publication_pk, user_pk):
+    user = CustomUser.objects.get(pk=user_pk)
+    publication = Publication.objects.get(pk=publication_pk)
+
+    publication.authors.remove(user)
+    publication.save()
+    if request.user == publication.creator:
+        return redirect('blog:author_list', publication_pk=publication_pk)
+    return redirect('blog:publication', pk=publication_pk)
+

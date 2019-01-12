@@ -1,0 +1,21 @@
+{% extends 'blog/base.html' %} {% block content %}
+<h1>Add Author</h1>
+
+<form action="{% url 'blog:add_author' publication_pk=publication_pk %}" method="post">
+{% for message in messages %}
+    {% if  message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+    <div class="alert alert-danger">
+        {{ message }}
+    </div>
+    {% else %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+    {% endif %}
+{% endfor %}
+    {% csrf_token %}
+    <label for="username">Username: </label>
+    <input type="text" name="username" id="username">
+    <button type="submit">Add</button>
+</form>
+{% endblock %}

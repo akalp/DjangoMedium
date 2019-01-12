@@ -1,0 +1,23 @@
+{% extends 'blog/base.html' %}
+<!-- -->
+{% block head %} {{ form.media }} {%endblock %}
+<!-- -->
+{% block featured %}
+    {% if publication.image %}
+<img id="featured" src="{{publication.image.url}}" alt="" />
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+<form class="post-form" method="post" enctype="multipart/form-data" "post_form">
+    {% csrf_token %}
+    {{form.image}}
+    {{form.name}}
+    info: {{form.info}}
+
+    <button type="submit" class="save btn btn-default">Save</button>
+</form>
+
+{% endblock %}

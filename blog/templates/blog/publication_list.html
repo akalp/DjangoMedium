@@ -1,0 +1,26 @@
+{% extends 'blog/base.html' %}
+
+{% block title %} List of publications {% endblock %}
+
+{% block content %}
+{% for publication in publication_list %}
+        <div class="collection">
+                        {% if publication.image %}
+                            <a href="{% url 'blog:publication' pk=publication.pk %}">
+                                <img class="featured-on-index img-responsive" src="{{ publication.image.url }}" alt=""/>
+                            </a>{% endif %}
+                        <h1>
+                            <a href="{% url 'blog:publication' pk=publication.pk %}">{{ publication.name|striptags }}</a>
+                        </h1>
+                        <div class="date">
+                            <p>by
+                                <a href="{% url 'blog:profile' pk=publication.creator.pk %}">{{ publication.creator }}</a>
+                                on {{ publication.published_date|date|striptags }}</p>
+                        </div>
+                        <div class="snippet">
+                            <p>{{ publication.info|striptags|safe|truncatechars:250 }}</p>
+                        </div>
+                    </div>
+    {% endfor %}
+
+{% endblock %}

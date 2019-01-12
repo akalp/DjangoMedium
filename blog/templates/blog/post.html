@@ -17,7 +17,7 @@
     {% endif %}
     <p>by
         <a href="{% url 'blog:profile' pk=post.author.pk %}">{{ post.author }}</a>
-
+        {% if post.publication %} for {{ post.publication.publication }} {% endif %}
         {% if user.is_authenticated %} {% if post.author != user %}
             {% if post.author.pk|already_followed_user:user %}
 

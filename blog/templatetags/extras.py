@@ -1,5 +1,5 @@
 from django import template
-from blog.models import CustomUser, Post, PostReport, UserReport, Collection
+from blog.models import CustomUser, Post, PostReport, UserReport, Collection, Publication
 register = template.Library()
 
 
@@ -53,4 +53,10 @@ def not_reported_post(pk, user):
 def already_bookmarked_collection(collection_pk, user):
     collection = Collection.objects.get(pk=collection_pk)
     return user in collection.bookmarked_by.all()
+
+
+@register.filter
+def already_followed_publication(pk, user):
+    publication = Publication.objects.get(pk=pk)
+    return publication in user.followed_publications.all()
 
