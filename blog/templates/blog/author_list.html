@@ -4,8 +4,8 @@
     <ul>
     {% for author in author_list %}
         <li><a href="{% url 'blog:profile' pk=author.pk %}">{{ author.username }}</a>
-            {% if author.pk != creator_pk %}
-            <a href="{% url 'blog:remove_author' publication_pk=publication_pk user_pk=author.pk %}">Remove Author</a>
+            {% if author.pk != creator_pk and user.pk == creator_pk %}
+                <a href="{% url 'blog:remove_author' publication_pk=publication_pk user_pk=author.pk %}">Remove Author</a>
             {% endif %}
         </li>
     {% endfor %}

@@ -33,6 +33,9 @@
                         <div class="date">
                             <p>by
                                 <a href="{% url 'blog:profile' pk=post.author.pk %}">{{ post.author }}</a>
+                                {% if post.publication %} for
+                                    <a href="{% url 'blog:publication' pk=post.publication.publication.pk %}">{{ post.publication.publication }}</a>
+                                {% endif %}
                                 on {{ post.created_date|date|striptags }}</p>
                         </div>
                         <div class="tags">

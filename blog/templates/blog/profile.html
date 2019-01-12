@@ -32,9 +32,15 @@
                 <a href="{% url 'blog:followers' pk=blog_user.pk %}">Followers </a>
                 <span>{{ blog_user.follows.count }}</span>
             </p>
+            <p class="text-center">
+                    <a href="{% url 'blog:user_publications' pk=blog_user.pk %}">Publications</a>
+            </p>
 
 
             {% if user.is_authenticated and blog_user == user %}
+                <p class="text-center">
+                    <a href="{% url 'blog:new_publication' %}">Create Publication</a>
+                </p>
                 <p class="text-center">
                     <a href="{% url 'blog:me_edit' %}">Update Profile</a>
                 </p>
@@ -43,6 +49,9 @@
                 </p>
                 <p class="text-center">
                     <a href="{% url 'blog:bookmarked_collections' %}">Bookmarked Collections</a>
+                </p>
+                <p class="text-center">
+                    <a href="{% url 'blog:followed_publications' %}">Followed Publications</a>
                 </p>
                 <p class="text-center">
                     <a href="{% url 'blog:blockedlist' %}">Blocked Users</a>

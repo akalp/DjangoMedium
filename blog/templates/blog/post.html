@@ -13,11 +13,13 @@
 
     </h1>
     {% if user.draft_collections %}
-    <a href="{% url 'blog:select_collection' post_pk=post.pk %}">add to collection</a>
+        <a href="{% url 'blog:select_collection' post_pk=post.pk %}">add to collection</a>
     {% endif %}
     <p>by
         <a href="{% url 'blog:profile' pk=post.author.pk %}">{{ post.author }}</a>
-        {% if post.publication %} for {{ post.publication.publication }} {% endif %}
+        {% if post.publication %} for
+            <a href="{% url 'blog:publication' pk=post.publication.publication.pk %}">{{ post.publication.publication }}</a>
+        {% endif %}
         {% if user.is_authenticated %} {% if post.author != user %}
             {% if post.author.pk|already_followed_user:user %}
 

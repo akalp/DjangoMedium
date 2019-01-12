@@ -689,3 +689,11 @@ def publicationremoveauthor(request, publication_pk, user_pk):
         return redirect('blog:author_list', publication_pk=publication_pk)
     return redirect('blog:publication', pk=publication_pk)
 
+
+class PublicationFollowerListView(generic.ListView):
+    model = CustomUser
+    context_object_name = 'users_list'
+    template_name = 'blog/userlist.html'
+
+    def get_queryset(self):
+        return CustomUser.objects.filter(followed_publications__in=[self.kwargs['pk']])

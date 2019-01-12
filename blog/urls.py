@@ -66,7 +66,8 @@ urlpatterns = [
 
     path('add_to_collection/<int:post_pk>/<int:collection_pk>', views.add_post_to_collection, name='add_to_collection'),
     path('select_collection/<int:post_pk>/', views.SelectCollectionsListView.as_view(), name='select_collection'),
-    path('remove_from_collection/<int:post_pk>/<int:collection_pk>', views.remove_post_from_collection, name='remove_from_collection'),
+    path('remove_from_collection/<int:post_pk>/<int:collection_pk>', views.remove_post_from_collection,
+         name='remove_from_collection'),
 
     path('collections/new/', views.CollectionCreateView.as_view(), name='new_collection'),
 
@@ -78,13 +79,16 @@ urlpatterns = [
     path('publication/<int:pk>/delete/', views.PublicationDeleteView.as_view(), name='delete_publication'),
     path('publications/new/', views.PublicationCreateView.as_view(), name='new_publication'),
 
-    path('publication/<int:publication_pk>/new', views.NewPostView.as_view(), name='collection_new_post'),
+    path('publication/<int:publication_pk>/new', views.NewPostView.as_view(), name='publication_new_post'),
 
     path('user/<pk>/publications/', views.UserPublicationsListView.as_view(), name='user_publications'),
     path('me/followed_publications/', views.FollowedPublicationsListView.as_view(), name='followed_publications'),
 
     path('publication/<int:publication_pk>/add_author/', views.publicationaddauthor, name='add_author'),
-    path('publication/<int:publication_pk>/leave_author/<user_pk>', views.publicationremoveauthor, name='remove_author'),
+    path('publication/<int:publication_pk>/leave_author/<user_pk>', views.publicationremoveauthor,
+         name='remove_author'),
 
     path('publication/<int:publication_pk>/authors', views.PublicationAuthorListView.as_view(), name='author_list'),
+
+    path('publication/<int:pk>/followers/', views.PublicationFollowerListView.as_view(), name='publication_followers'),
 ]
