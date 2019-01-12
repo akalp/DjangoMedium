@@ -84,8 +84,8 @@ urlpatterns = [
     path('user/<pk>/publications/', views.UserPublicationsListView.as_view(), name='user_publications'),
     path('me/followed_publications/', views.FollowedPublicationsListView.as_view(), name='followed_publications'),
 
-    path('publication/<int:publication_pk>/add_author/', views.publicationaddauthor, name='add_author'),
-    path('publication/<int:publication_pk>/leave_author/<user_pk>', views.publicationremoveauthor,
+    path('publication/<int:publication_pk>/add_author/', views.publication_add_author, name='add_author'),
+    path('publication/<int:publication_pk>/leave_author/<user_pk>', views.publication_remove_author,
          name='remove_author'),
 
     path('publication/<int:publication_pk>/authors', views.PublicationAuthorListView.as_view(), name='author_list'),

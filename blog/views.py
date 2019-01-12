@@ -663,7 +663,7 @@ def unfollow_publication(request, publication_pk):
     return redirect('blog:publication', pk=publication_pk)
 
 @login_required
-def publicationaddauthor(request, publication_pk):
+def publication_add_author(request, publication_pk):
     if request.method == 'POST':
         username = request.POST.get('username')
         try:
@@ -679,7 +679,7 @@ def publicationaddauthor(request, publication_pk):
 
 
 @login_required
-def publicationremoveauthor(request, publication_pk, user_pk):
+def publication_remove_author(request, publication_pk, user_pk):
     user = CustomUser.objects.get(pk=user_pk)
     publication = Publication.objects.get(pk=publication_pk)
 
