@@ -68,7 +68,7 @@ class TopicPostsListView(generic.ListView):
     context_object_name = 'posts_list'
 
     def get_queryset(self):
-        return Post.objects.filter(topics__name=self.kwargs['topic'], published_date__isnull=False)
+        return Post.objects.filter(topics__name=self.kwargs['topic'], published_date__isnull=False).order_by('-published_date')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
