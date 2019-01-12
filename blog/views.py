@@ -326,7 +326,7 @@ class NewPostView(LoginRequiredMixin, generic.CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         post = form.save()
-        if self.kwargs['publication_pk']:
+        if 'publication_pk' in self.kwargs.keys():
             PublicationPost(post_id=post.id, publication_id=self.kwargs['publication_pk']).save()
         return HttpResponseRedirect(reverse('blog:post', kwargs={'pk': post.pk}))
 
@@ -565,3 +565,8 @@ def collection_publish(request, pk):
     collection = get_object_or_404(Collection, pk=pk)
     collection.publish()
     return HttpResponseRedirect(reverse('blog:collection', kwargs={'pk': pk}))
+
+
+# Publication #
+
+# TODO publication views
