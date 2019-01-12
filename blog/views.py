@@ -626,8 +626,8 @@ class FollowedPublicationsListView(generic.ListView):
         return self.request.user.followed_publications.all()
 
 
-class PublicationAuthorListView(LoginRequiredMixin, generic.ListView):
-    login_url = '/login/'
+class PublicationAuthorListView(generic.ListView):
+    # login_url = '/login/'
     template_name = 'blog/author_list.html'
     context_object_name = 'author_list'
 
@@ -672,7 +672,7 @@ def publicationaddauthor(request, publication_pk):
             messages.success(request, "{} is added".format(username))
             return HttpResponseRedirect(reverse('blog:add_author', kwargs={'publication_pk':publication_pk}))
         except:
-            messages.error(request, 'user is not found')
+            messages.error(request, '{} is not found'.format(username))
             return HttpResponseRedirect(reverse('blog:add_author', kwargs={'publication_pk':publication_pk}))
     else:
         return render(request, 'blog/addauthor.html', {'publication_pk':publication_pk})
