@@ -715,7 +715,7 @@ def admin_report_view(request):
         cursor.execute("SELECT count(*) FROM blog_publication")
         report['publication_count'] = cursor.fetchone()[0]
 
-        cursor.execute("SELECT avg(count) FROM (SELECT count(post_id) as count FROM blog_publication, blog_publicationpost WHERE blog_publication.id=blog_publicationpost.publication_id GROUP BY blog_publication.id) ta")
+        cursor.execute("SELECT avg(count) FROM publicationposts")
         report['avg_post_of_publications'] = cursor.fetchone()[0]
 
         cursor.execute("SELECT count(*) FROM blog_collection")
@@ -733,14 +733,22 @@ def admin_report_view(request):
 
         cursor.execute("SELECT blog_customuser_following.from_customuser_id as username, count(to_customuser_id) as follows FROM  blog_customuser_following group by blog_customuser_following.from_customuser_id order by follows desc;")
         row = cursor.fetchone()
-        report['who_follows_most_user'] = row[0]
-        report['follows'] = row[1]
+        if row is not None:
+            report['who_follows_most_user'] = row[0]
+            report['follows'] = row[1]
+        else:
+            report['who_follows_most_user'] = "-"
+            report['follows'] = "-"
 
         cursor.execute(
             "SELECT blog_customuser_following.to_customuser_id as username, count(from_customuser_id) as follows FROM  blog_customuser_following group by blog_customuser_following.to_customuser_id order by follows desc;")
         row = cursor.fetchone()
-        report['who_following_by_most_user'] = row[0]
-        report['following'] = row[1]
+        if row is not None:
+            report['who_following_by_most_user'] = row[0]
+            report['following'] = row[1]
+        else:
+            report['who_following_by_most_user'] = "-"
+            report['following'] = "-"
 
         cursor.execute("SELECT blog_reporttype.type, count(blog_userreport.reported_id)  FROM blog_reporttype, blog_userreport WHERE blog_reporttype.id=blog_userreport.report_type_id GROUP BY blog_reporttype.id")
         report['user_reporttype'] = dict(cursor.fetchall())
