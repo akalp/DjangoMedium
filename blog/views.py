@@ -757,3 +757,19 @@ def admin_report_view(request):
         report['post_reporttype'] = dict(cursor.fetchall())
 
     return render(request, 'blog/admin_report.html', report)
+
+
+# Topic
+
+class TopicListView(generic.ListView):
+    model = Topic
+    template_name = 'topic_list.html'
+    context_object_name = 'topics'
+
+
+class FollowedTopicsListView(generic.ListView):
+    template_name = 'blog/topic_list.html'
+    context_object_name = 'topics'
+
+    def get_queryset(self):
+        return self.request.user.followed_topics.all()

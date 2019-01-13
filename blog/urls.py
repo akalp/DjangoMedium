@@ -93,4 +93,7 @@ urlpatterns = [
     path('publication/<int:pk>/followers/', views.PublicationFollowerListView.as_view(), name='publication_followers'),
 
     path('admin_report/', views.admin_report_view, name='report'),
+
+    path('me/followed_topics/', views.FollowedTopicsListView.as_view(), name='followed_topics'),
+    path('topics/', views.TopicListView.as_view(), name='all_topics'),
 ]
