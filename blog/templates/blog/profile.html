@@ -50,6 +50,9 @@
             <p class="text-center">
                 <a href="{% url 'blog:new_publication' %}">Create Publication</a>
             </p>
+                <p class="text-center">
+                <a href="{% url 'blog:followed_publications' %}">Followed Publications</a>
+            </p>
             <p class="text-center">
                 <a href="{% url 'blog:me_edit' %}">Update Profile</a>
             </p>
@@ -57,21 +60,16 @@
                 <a href="{% url 'blog:bookmarked' %}">Bookmarked Posts</a>
             </p>
             <p class="text-center">
-                <a href="{% url 'blog:bookmarked_collections' %}">Bookmarked Collections</a>
-            </p>
-            <p class="text-center">
-                <a href="{% url 'blog:followed_publications' %}">Followed Publications</a>
-            </p>
-            <p class="text-center">
-                <a href="{% url 'blog:blockedlist' %}">Blocked Users</a>
-            </p>
-            <p class="text-center">
                 <a href="{% url 'blog:new_collection' %}">Create Collection</a>
-            </p>
-            <p class="text-center">
+            |
                 <a href="{% url 'blog:draft_collections' %}">Draft Collections</a>
             </p>
-
+            <p class="text-center">
+                <a href="{% url 'blog:bookmarked_collections' %}">Bookmarked Collections</a>
+            </p>
+                <p class="text-center">
+                <a href="{% url 'blog:blockedlist' %}">Blocked Users</a>
+            </p>
             {% endif %}
         </div>
 

@@ -7,7 +7,7 @@
 <div class="collection">
     <div class="row">
         {% if publication.image %}
-        <div class="col-md-5">
+        <div class="col-md-3">
             <a href="{% url 'blog:publication' pk=publication.pk %}">
                 <img class="featured-on-index img-responsive" src="{{ publication.image.url }}" alt=""/>
             </a>
