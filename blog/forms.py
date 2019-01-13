@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import CustomUser, Post, Comment, UserReport, PostReport, Collection, Publication
+from .models import CustomUser, Post, Comment, UserReport, PostReport, Collection, Publication, ReportType
 
 from datetime import datetime
 
@@ -84,3 +84,21 @@ class PublicationForm(forms.ModelForm):
             'name': forms.Textarea(attrs={'class': 'post-title-input', 'placeholder': 'Title'}),
             'info': forms.TextInput(),
         }
+
+
+class ReportTypeForm(forms.ModelForm):
+    class Meta:
+        model = ReportType
+        fields = ('type',)
+
+
+class AdminPostReportForm(forms.ModelForm):
+    class Meta:
+        model = PostReport
+        fields = ('user', 'post', 'report_type',)
+
+
+class AdminUserReportForm(forms.ModelForm):
+    class Meta:
+        model = UserReport
+        fields = ('reporter', 'reported', 'report_type',)
