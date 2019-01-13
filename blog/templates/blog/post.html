@@ -1,8 +1,8 @@
 {% extends 'blog/base.html' %}{% load extras %} {% block content %} {% if post.image %}
-    <img id="featured" src="{{ post.image.url }}" alt="your image"/>{% else %} {% endif %}
-    <h1>{{ post.title }} {% if user.is_authenticated and post.author == user %}
+<img id="featured" src="{{ post.image.url }}" alt="your image"/>{% else %} {% endif %}
+<h1>{{ post.title }} {% if user.is_authenticated and post.author == user %}
 
-        <span class="post-edit-publish-links">
+    <span class="post-edit-publish-links">
         <a href="{% url 'blog:post_edit' pk=post.pk %}">Edit</a> |
         <a href="{% url 'blog:post_delete' pk=post.pk %}">Delete</a>
 
@@ -11,50 +11,53 @@
 
                 </span>{% endif %} {% endif %}
 
-    </h1>
-    {% if user.draft_collections %}
-        <a href="{% url 'blog:select_collection' post_pk=post.pk %}">add to collection</a>
+</h1>
+{% if user.draft_collections %}
+<a href="{% url 'blog:select_collection' post_pk=post.pk %}">add to collection</a>
+{% endif %}
+<p>by
+    <a href="{% url 'blog:profile' pk=post.author.pk %}">{{ post.author }}</a>
+    {% if post.publication %} for
+    <a href="{% url 'blog:publication' pk=post.publication.publication.pk %}">{{ post.publication.publication }}</a>
     {% endif %}
-    <p>by
-        <a href="{% url 'blog:profile' pk=post.author.pk %}">{{ post.author }}</a>
-        {% if post.publication %} for
-            <a href="{% url 'blog:publication' pk=post.publication.publication.pk %}">{{ post.publication.publication }}</a>
-        {% endif %}
-        {% if user.is_authenticated %} {% if post.author != user %}
-            {% if post.author.pk|already_followed_user:user %}
+    {% if post.published_date %} on {{ post.published_date|date }}{% endif %}
+    <br>
+    {% if user.is_authenticated %} {% if post.author != user %}
+    {% if post.author.pk|already_followed_user:user %}
 
-                <a href="{% url 'blog:unfollow_user' author_pk=post.author.pk post_pk=post.pk %}">Unfollow</a>
+    <a class="btn" href="{% url 'blog:unfollow_user' author_pk=post.author.pk post_pk=post.pk %}">Unfollow</a>
 
-            {% else %}
-                <a href="{% url 'blog:follow_user' author_pk=post.author.pk post_pk=post.pk %}">Follow</a>
-            {% endif %}
-            {% if post.author.pk|not_reported_user:user %}
-                <a href="{% url 'blog:report_user' reported_pk=post.author.pk %}">Report User</a>
-            {% endif %}
-            {% if post.pk|not_reported_post:user %}
-                <a href="{% url 'blog:report_post' reported_pk=post.pk %}">Report Post</a>
-            {% endif %}
+    {% else %}
+    <a class="btn" href="{% url 'blog:follow_user' author_pk=post.author.pk post_pk=post.pk %}">Follow</a>
+    {% endif %}
+    {% if post.author.pk|not_reported_user:user %}
+    <a class="btn"  href="{% url 'blog:report_user' reported_pk=post.author.pk %}">Report User</a>
+    {% endif %}
+    {% if post.pk|not_reported_post:user %}
+    <a class="btn" href="{% url 'blog:report_post' reported_pk=post.pk %}">Report Post</a>
+    {% endif %}
 
-        {% endif %} {% else %} Login to follow {% endif %}
-        <br>{% if post.published_date %} on {{ post.published_date|date }}{% endif %}
-    </p>
+    {% endif %} {% else %} Login to follow {% endif %}
+
+</p>
 
 
-    <div class="blog-tags">
-        {% for topic in post.topics.all %}
-            <a href="{% url 'blog:topics' topic=topic %}">{{ topic }}</a>
-        {% empty %} {% endfor %}
-    </div>
-    <div class="blog-body">
-        {{ post.content|safe }}
-    </div>
-    <div class="like">
+<div class="blog-tags">
+    {% for topic in post.topics.all %}
+    <a href="{% url 'blog:topics' topic=topic %}">{{ topic }}</a>
+    {% empty %} {% endfor %}
+</div>
+<div class="blog-body">
+    {{ post.content|safe }}
+</div>
+<div class="row">
+    <div class="col-md-1">
         <p>
             {% if post.pk|already_liked:user %}
-                <a href="{% url 'blog:remove_like' pk=post.pk %}">
-            {% else %}
+            <a href="{% url 'blog:remove_like' pk=post.pk %}">
+                {% else %}
                 <a href="{% url 'blog:add_like' pk=post.pk %}">
-            {% endif %}
+                    {% endif %}
         </p>
 
         <span class="glyphicon glyphicon-hand-up larger" style="font-size:3em;"></span>
@@ -63,13 +66,13 @@
     </span>
     </div>
 
-    <div class="like">
+    <div class="col-md-1">
         <p>
             {% if post.pk|already_bookmarked_post:user %}
-                <a href="{% url 'blog:remove_bookmark' pk=post.pk %}">
-            {% else %}
+            <a href="{% url 'blog:remove_bookmark' pk=post.pk %}">
+                {% else %}
                 <a href="{% url 'blog:add_bookmark' pk=post.pk %}">
-            {% endif %}
+                    {% endif %}
         </p>
 
         <span class="glyphicon glyphicon-bookmark larger" style="font-size:3em;"></span>
@@ -77,39 +80,40 @@
         <span style="vertical-align:50%"> {{ post.bookmarks.count }}
     </span>
     </div>
-    <h2>Responses</h2> {% for comment in post.all_comments %}
+</div>
+<h2>Responses</h2> {% for comment in post.all_comments %}
 
-        <div class="panel panel-default comment-container">
-            <div class="panel panel-head">
+<div class="panel panel-default comment-container">
+    <div class="panel panel-head">
         <span class="comment-author">
             {{ comment.author }}
         </span>
-                <span class="comment-date"> {{ comment.created_date|timesince }} ago</span>
-                {% if user.is_authenticated and comment.author == user or post.author == user or user.is_staff %}
-                    <span class="comment-delete">
+        <span class="comment-date"> {{ comment.created_date|timesince }} ago</span>
+        {% if user.is_authenticated and comment.author == user or post.author == user or user.is_staff %}
+        <span class="comment-delete">
             <a href="{% url 'blog:delete_comment' pk=comment.pk %}">
                 <span class="glyphicon glyphicon-trash"></span>
             </a>
         </span>
-                {% endif %}
+        {% endif %}
 
-            </div>
-            <div class="panel-body comment-content">
-                {{ comment.content }}
-            </div>
+    </div>
+    <div class="panel-body comment-content">
+        {{ comment.content }}
+    </div>
 
-        </div>
-    {% empty %}
-        <p>Be the first to comment!</p>
-    {% endfor %} {% if user.is_authenticated %}
-        <div class="comment-form-container">
-            <form method="post" action="{% url 'blog:add_comment' pk=post.pk %}" class="comment-form">
-                {% csrf_token %} {{ comment_form.as_p }}
-                <button type="submit" class="btn btn-primary">Add Response</button>
-            </form>
-            {% else %} To comment, you must be a registered user.
-            <a href="{% url 'blog:login' %}">Sign in</a> now or
-            <a href="{% url 'blog:register' %}">
-                create an account</a> to get started.
-        </div>
-        <br> {% endif %} {% endblock %}
+</div>
+{% empty %}
+<p>Be the first to comment!</p>
+{% endfor %} {% if user.is_authenticated %}
+<div class="comment-form-container">
+    <form method="post" action="{% url 'blog:add_comment' pk=post.pk %}" class="comment-form">
+        {% csrf_token %} {{ comment_form.as_p }}
+        <button type="submit" class="btn btn-primary">Add Response</button>
+    </form>
+    {% else %} To comment, you must be a registered user.
+    <a href="{% url 'blog:login' %}">Sign in</a> now or
+    <a href="{% url 'blog:register' %}">
+        create an account</a> to get started.
+</div>
+<br> {% endif %} {% endblock %}

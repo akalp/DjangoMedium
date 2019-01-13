@@ -8,6 +8,14 @@ a:hover {
   color: #0c7a5c;
 }
 
+.post {
+    width: 100%;
+    background-color: #ddd;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom:15px;
+}
+
 .post-title-input {
   border: none;
   resize: none;
@@ -34,12 +42,17 @@ a:hover {
   text-align: center;
   margin: 0 auto;
   z-index: 0;
+  font-size: 1.5em;
 }
 
 .navbar-right,
 .navbar-left {
   position: relative;
   z-index: 1;
+}
+
+.navbar-right>a{
+    margin-right: 6px;
 }
 
 .btn-nav {
@@ -119,4 +132,35 @@ a > img:hover {
 
 .featured-on-index {
   max-height: 300px;
+}
+
+.btn {
+  border-radius: 0.5em;
+  border-style: solid;
+  padding: 0.5em 1em;
+  background-color: transparent;
+  color: #03a87c;
+  border-color: #03a87c;
+}
+
+.btn-hover {
+  color: #0c7a5c;
+  border-color: #0c7a5c;
+  text-decoration: none;
+}
+
+.collection {
+    background-color: #ddd;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 25px;
+}
+
+.avatar {
+    border-color: #fff;
+    border-style: solid;
+    border-width: 5px;
+    border-radius:200px;
+    width: 250px;
+    height: 250px;
 }

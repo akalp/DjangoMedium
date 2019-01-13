@@ -1,117 +1,124 @@
 {% extends 'blog/base.html' %}{% load extras %} {% block content %}
 
-    <div class="container">
-        <div class="row">
-            <h1 class="text-center">{{ blog_user.username|upper }}</h1>
-            <p class="text-center">
-                {% if user.is_authenticated %}
-                    {% if blog_user != user %}
-                    {% if blog_user.pk|already_followed_user:user %}
-
-                        <a href="{% url 'blog:unfollow_user2' pk=blog_user.pk %}">Unfollow</a>
-
-                    {% else %}
-                        <a href="{% url 'blog:follow_user2' pk=blog_user.pk %}">Follow</a>
-                    {% endif %}
-                    {% if blog_user.pk|already_blocked_user:user %}
-                        <a href="{% url 'blog:unblock_user' pk=blog_user.pk %}">Unblock</a>
-                    {% else %}
-                        <a href="{% url 'blog:block_user' pk=blog_user.pk %}">Block</a>
-                    {% endif %}
-                        {% if blog_user.pk|not_reported_user:user%}
-                        <a href="{% url 'blog:report_user' reported_pk=blog_user.pk %}">Report</a>
-                    {% endif %}
-                    {% endif %}
-                {% else %}
-                    Login to follow
-                {% endif %}
-            </p>
-            <p class="text-center">
+<div class="container">
+    <div class="row">
+        <div align="center" class="col-md-3" style="border-radius: 10px; background-color:#eee; padding: 10px;">
+            <img class="avatar" src="{{ blog_user.avatar.url }}" alt="" >
+            <p class="text-center" style="margin-top:15px;">
                 <a href="{% url 'blog:follows' pk=blog_user.pk %}">Following </a>
                 <span>{{ blog_user.following.count }}</span><br>
                 <a href="{% url 'blog:followers' pk=blog_user.pk %}">Followers </a>
                 <span>{{ blog_user.follows.count }}</span>
             </p>
+        </div>
+        <div align="center" class="col-md-7">
+            <h1 class="text-center">{{ blog_user.username|upper }}</h1>
             <p class="text-center">
-                    <a href="{% url 'blog:user_publications' pk=blog_user.pk %}">Publications</a>
+                {% if user.is_authenticated %}
+                {% if blog_user != user %}
+                {% if blog_user.pk|already_followed_user:user %}
+            <p class="text-center">
+                <a href="{% url 'blog:unfollow_user2' pk=blog_user.pk %}">Unfollow</a>
+
+                {% else %}
+                <a href="{% url 'blog:follow_user2' pk=blog_user.pk %}">Follow</a>
+                {% endif %}
+            </p>
+            {% if blog_user.pk|already_blocked_user:user %}
+            <p class="text-center">
+                <a href="{% url 'blog:unblock_user' pk=blog_user.pk %}">Unblock</a>
+                {% else %}
+                <a href="{% url 'blog:block_user' pk=blog_user.pk %}">Block</a>
+                {% endif %}
+            </p>
+            {% if blog_user.pk|not_reported_user:user%}
+            <p class="text-center">
+                <a href="{% url 'blog:report_user' reported_pk=blog_user.pk %}">Report</a>
+                {% endif %}
+            </p>
+            {% endif %}
+            {% else %}
+            Login to follow
+            {% endif %}
+            </p>
+            <p class="text-center">
+                <a href="{% url 'blog:user_publications' pk=blog_user.pk %}">Publications</a>
             </p>
 
 
             {% if user.is_authenticated and blog_user == user %}
-                <p class="text-center">
-                    <a href="{% url 'blog:new_publication' %}">Create Publication</a>
-                </p>
-                <p class="text-center">
-                    <a href="{% url 'blog:me_edit' %}">Update Profile</a>
-                </p>
-                <p class="text-center">
-                    <a href="{% url 'blog:bookmarked' %}">Bookmarked Posts</a>
-                </p>
-                <p class="text-center">
-                    <a href="{% url 'blog:bookmarked_collections' %}">Bookmarked Collections</a>
-                </p>
-                <p class="text-center">
-                    <a href="{% url 'blog:followed_publications' %}">Followed Publications</a>
-                </p>
-                <p class="text-center">
-                    <a href="{% url 'blog:blockedlist' %}">Blocked Users</a>
-                </p>
-                <p class="text-center">
-                    <a href="{% url 'blog:new_collection' %}">Create Collection</a>
-                </p>
-                <p class="text-center">
-                    <a href="{% url 'blog:draft_collections' %}">Draft Collections</a>
-                </p>
+            <p class="text-center">
+                <a href="{% url 'blog:new_publication' %}">Create Publication</a>
+            </p>
+            <p class="text-center">
+                <a href="{% url 'blog:me_edit' %}">Update Profile</a>
+            </p>
+            <p class="text-center">
+                <a href="{% url 'blog:bookmarked' %}">Bookmarked Posts</a>
+            </p>
+            <p class="text-center">
+                <a href="{% url 'blog:bookmarked_collections' %}">Bookmarked Collections</a>
+            </p>
+            <p class="text-center">
+                <a href="{% url 'blog:followed_publications' %}">Followed Publications</a>
+            </p>
+            <p class="text-center">
+                <a href="{% url 'blog:blockedlist' %}">Blocked Users</a>
+            </p>
+            <p class="text-center">
+                <a href="{% url 'blog:new_collection' %}">Create Collection</a>
+            </p>
+            <p class="text-center">
+                <a href="{% url 'blog:draft_collections' %}">Draft Collections</a>
+            </p>
 
             {% endif %}
-
-
-            <div class="col-md-3">
-                <img src="{{ blog_user.avatar.url }}" alt="" class="thumbnail img-responsive">
-
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3">
-                <h1 class="text-center">Recent Posts</h1>
-                {% for post in blog_user.recent_posts.all %}
-                    <ul>
-                        <span class="glyphicon glyphicon-menu-right"></span>
-                        <a href="{% url 'blog:post' pk=post.pk %}">{{ post.title }}</a>
-                    </ul>
-                {% endfor %}
-            </div>
-        <div class="col-md-3">
-                <h1 class="text-center">Collections</h1>
-                {% for collection in collections %}
-                    <ul>
-                        <span class="glyphicon glyphicon-menu-right"></span>
-                        <a href="{% url 'blog:collection' pk=collection.pk %}">{{ collection.title }}</a>
-                    </ul>
-                {% endfor %}
-            </div>
-            <div class="col-md-3">
-                <h1 class="text-center">Recent Comments</h1>
-                {% for comment in blog_user.recent_comments.all %}
-                    <ul>
-                        <span class="glyphicon glyphicon-menu-right"></span>
-                        {{ comment.content|truncatechars:20 }} on
-                        <a href="{% url 'blog:post' pk=comment.post.pk %}"> {{ comment.post.title }}</a>
-                    </ul>
-                {% endfor %}
-            </div>
-            <div class="col-md-3">
-                <h1 class="text-center">Recent Likes</h1>
-                {% for post in blog_user.recent_likes.all %}
-                    <ul>
-                        <span class="glyphicon glyphicon-menu-right"></span>
-                        <a href="{% url 'blog:post' pk=post.pk %}">{{ post.title }}</a>
-                    </ul> {% endfor %}
-
-            </div>
         </div>
 
 
     </div>
+    <div class="row">
+        <div class="col-md-3">
+            <h1 class="text-center">Recent Posts</h1>
+            {% for post in blog_user.recent_posts.all %}
+            <ul>
+                <span class="glyphicon glyphicon-menu-right"></span>
+                <a href="{% url 'blog:post' pk=post.pk %}">{{ post.title }}</a>
+            </ul>
+            {% endfor %}
+        </div>
+        <div class="col-md-3">
+            <h1 class="text-center">Collections</h1>
+            {% for collection in collections %}
+            <ul>
+                <span class="glyphicon glyphicon-menu-right"></span>
+                <a href="{% url 'blog:collection' pk=collection.pk %}">{{ collection.title }}</a>
+            </ul>
+            {% endfor %}
+        </div>
+        <div class="col-md-3">
+            <h1 class="text-center">Recent Comments</h1>
+            {% for comment in blog_user.recent_comments.all %}
+            <ul>
+                <span class="glyphicon glyphicon-menu-right"></span>
+                {{ comment.content|truncatechars:20 }} on
+                <a href="{% url 'blog:post' pk=comment.post.pk %}"> {{ comment.post.title }}</a>
+            </ul>
+            {% endfor %}
+        </div>
+        <div class="col-md-3">
+            <h1 class="text-center">Recent Likes</h1>
+            {% for post in blog_user.recent_likes.all %}
+            <ul>
+                <span class="glyphicon glyphicon-menu-right"></span>
+                <a href="{% url 'blog:post' pk=post.pk %}">{{ post.title }}</a>
+            </ul>
+            {% endfor %}
+
+        </div>
+    </div>
+
+
+</div>
 
 {% endblock %}
