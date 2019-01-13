@@ -706,7 +706,6 @@ class PublicationFollowerListView(generic.ListView):
 # Report #
 
 def admin_report_view(request):
-    topics = Topic.objects.all()
     report = {}
     with connection.cursor() as cursor:
         cursor.execute("SELECT topics.name, count(post_id) FROM blog_topic AS topics LEFT JOIN blog_post_topics AS posts ON topics.name=posts.topic_id GROUP BY topics.name ORDER BY count(posts.post_id) DESC")
