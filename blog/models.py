@@ -154,7 +154,7 @@ class ReportType(models.Model):
     def save(self, *args, **kwargs):
         cursor = connection.cursor()
         cursor.execute("BEGIN")
-        cursor.execute("CALL insert_reporttype({})".format(self.type))
+        cursor.execute("CALL insert_reporttype('{}')".format(self.type))
         cursor.execute("COMMIT")
         return self
 
