@@ -25,6 +25,10 @@ class UserEditForm(forms.ModelForm):
                   'first_name', 'last_name',
                   'avatar', 'birthdate')
 
+        widgets = {
+            'birthdate': forms.SelectDateWidget(years=range(1919, datetime.now().year + 1))
+        }
+
 
 class PostForm(forms.ModelForm):
     class Meta:

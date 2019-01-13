@@ -90,6 +90,9 @@ class CustomUser(AbstractUser):
             return True
         return False
 
+    def set_image(self, image):
+        self.avatar = image
+
 
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL,

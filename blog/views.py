@@ -13,9 +13,11 @@ from django.contrib import messages
 from itertools import chain
 import re
 
-from .forms import UserForm, PostForm, UserEditForm, CommentForm, UserReportForm, PostReportForm, CollectionForm, PublicationForm
+from .forms import UserForm, PostForm, UserEditForm, CommentForm, UserReportForm, PostReportForm, CollectionForm, \
+    PublicationForm
 from .models import Post, Comment, Topic, CustomUser, Collection, Publication, PublicationPost
 
+from django.db import connection
 
 class IndexView(generic.ListView):
     template_name = 'blog/index.html'
@@ -68,7 +70,8 @@ class TopicPostsListView(generic.ListView):
     context_object_name = 'posts_list'
 
     def get_queryset(self):
-        return Post.objects.filter(topics__name=self.kwargs['topic'], published_date__isnull=False).order_by('-published_date')
+        return Post.objects.filter(topics__name=self.kwargs['topic'], published_date__isnull=False).order_by(
+            '-published_date')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -219,7 +222,7 @@ def profile_edit(request):
     if request.method == 'POST':
         user_form = UserEditForm(data=request.POST, instance=request.user)
         if 'avatar' in request.FILES:
-            user_form.avatar = request.FILES['avatar']
+            user_form.instance.set_image(request.FILES['avatar'])
         user_form.save()
 
         return HttpResponseRedirect(reverse('blog:me_edit'))
@@ -662,6 +665,7 @@ def unfollow_publication(request, publication_pk):
     user.save()
     return redirect('blog:publication', pk=publication_pk)
 
+
 @login_required
 def publication_add_author(request, publication_pk):
     if request.method == 'POST':
@@ -670,12 +674,12 @@ def publication_add_author(request, publication_pk):
             user = CustomUser.objects.get(pk=username)
             Publication.objects.get(pk=publication_pk).authors.add(user)
             messages.success(request, "{} is added".format(username))
-            return HttpResponseRedirect(reverse('blog:add_author', kwargs={'publication_pk':publication_pk}))
+            return HttpResponseRedirect(reverse('blog:add_author', kwargs={'publication_pk': publication_pk}))
         except:
             messages.error(request, '{} is not found'.format(username))
-            return HttpResponseRedirect(reverse('blog:add_author', kwargs={'publication_pk':publication_pk}))
+            return HttpResponseRedirect(reverse('blog:add_author', kwargs={'publication_pk': publication_pk}))
     else:
-        return render(request, 'blog/addauthor.html', {'publication_pk':publication_pk})
+        return render(request, 'blog/addauthor.html', {'publication_pk': publication_pk})
 
 
 @login_required
@@ -697,3 +701,5 @@ class PublicationFollowerListView(generic.ListView):
 
     def get_queryset(self):
         return CustomUser.objects.filter(followed_publications__in=[self.kwargs['pk']])
+
+
