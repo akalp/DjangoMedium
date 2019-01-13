@@ -703,3 +703,50 @@ class PublicationFollowerListView(generic.ListView):
         return CustomUser.objects.filter(followed_publications__in=[self.kwargs['pk']])
 
 
+# Report #
+
+def admin_report_view(request):
+    topics = Topic.objects.all()
+    report = {}
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT topics.name, count(post_id) FROM blog_topic AS topics LEFT JOIN blog_post_topics AS posts ON topics.name=posts.topic_id GROUP BY topics.name ORDER BY count(posts.post_id) DESC")
+        result = cursor.fetchall()
+        report['topics_report'] = dict(result)
+
+        cursor.execute("SELECT count(*) FROM blog_publication")
+        report['publication_count'] = cursor.fetchone()[0]
+
+        cursor.execute("SELECT avg(count) FROM (SELECT count(post_id) as count FROM blog_publication, blog_publicationpost WHERE blog_publication.id=blog_publicationpost.publication_id GROUP BY blog_publication.id) ta")
+        report['avg_post_of_publications'] = cursor.fetchone()[0]
+
+        cursor.execute("SELECT count(*) FROM blog_collection")
+        report['collection_count'] = cursor.fetchone()[0]
+
+        cursor.execute("SELECT avg(count) FROM (SELECT count(post_id) as count FROM blog_collection, blog_collection_posts WHERE blog_collection.id=blog_collection_posts.collection_id GROUP BY blog_collection.id) ta")
+        report['avg_post_of_collections'] = cursor.fetchone()[0]
+
+        cursor.execute("SELECT count(*) FROM blog_customuser")
+        report['user_count'] = cursor.fetchone()[0]
+
+        cursor.execute(
+            "SELECT avg(count) FROM (SELECT count(id) as count FROM blog_customuser, blog_post WHERE blog_customuser.username=blog_post.author_id GROUP BY blog_post.author_id) ta")
+        report['avg_post_of_users'] = cursor.fetchone()[0]
+
+        cursor.execute("SELECT blog_customuser_following.from_customuser_id as username, count(to_customuser_id) as follows FROM  blog_customuser_following group by blog_customuser_following.from_customuser_id order by follows desc;")
+        row = cursor.fetchone()
+        report['who_follows_most_user'] = row[0]
+        report['follows'] = row[1]
+
+        cursor.execute(
+            "SELECT blog_customuser_following.to_customuser_id as username, count(from_customuser_id) as follows FROM  blog_customuser_following group by blog_customuser_following.to_customuser_id order by follows desc;")
+        row = cursor.fetchone()
+        report['who_following_by_most_user'] = row[0]
+        report['following'] = row[1]
+
+        cursor.execute("SELECT blog_reporttype.type, count(blog_userreport.reported_id)  FROM blog_reporttype, blog_userreport WHERE blog_reporttype.id=blog_userreport.report_type_id GROUP BY blog_reporttype.id")
+        report['user_reporttype'] = dict(cursor.fetchall())
+
+        cursor.execute("SELECT blog_reporttype.type, count(blog_postreport.post_id)  FROM blog_reporttype, blog_postreport WHERE blog_reporttype.id=blog_postreport.report_type_id GROUP BY blog_reporttype.id")
+        report['post_reporttype'] = dict(cursor.fetchall())
+
+    return render(request, 'blog/admin_report.html', report)

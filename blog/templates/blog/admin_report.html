@@ -1,0 +1,41 @@
+<h1>Topic</h1>
+<h2>Post Counts:</h2>
+<ul>
+{% for key, value in topics_report.items %}
+    <li>{{ key }}: {{ value }}</li>
+{% endfor %}
+</ul>
+
+<h1>Publication</h1>
+<ul>
+    <li>Publication Count: {{ publication_count }}</li>
+    <li>Average Post Count: {{ avg_post_of_publications }}</li>
+</ul>
+
+<h1>Collection</h1>
+<ul>
+    <li>Collection Count: {{ collection_count }}</li>
+    <li>Average Post Count: {{ avg_post_of_collections }}</li>
+</ul>
+
+<h1>User</h1>
+<ul>
+    <li>User Count: {{ collection_count }}</li>
+    <li>Average Post Count: {{ avg_post_of_users }}</li>
+    <li>Who follows most user: {{ who_follows_most_user }}: {{ follows }}</li>
+    <li>Who follows most user: {{ who_following_by_most_user }}: {{ following }}</li>
+</ul>
+
+<h1>Report</h1>
+<h2>User</h2>
+<ul>
+{% for key, value in user_reporttype.items %}
+    <li>{{ key }}: {{ value }}</li>
+{% endfor %}
+</ul>
+<h2>Post</h2>
+<ul>
+{% for key, value in post_reporttype.items %}
+    <li>{{ key }}: {{ value }}</li>
+{% endfor %}
+</ul>

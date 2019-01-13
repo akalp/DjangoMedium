@@ -91,4 +91,6 @@ urlpatterns = [
     path('publication/<int:publication_pk>/authors', views.PublicationAuthorListView.as_view(), name='author_list'),
 
     path('publication/<int:pk>/followers/', views.PublicationFollowerListView.as_view(), name='publication_followers'),
+
+    path('admin_report/', views.admin_report_view, name='report'),
 ]
