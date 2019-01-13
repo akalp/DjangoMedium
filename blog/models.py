@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
-from django.db import models
+from django.db import models, connection
 from django.utils import timezone
 from django.conf import settings
 from django.urls import reverse
@@ -86,7 +86,7 @@ class CustomUser(AbstractUser):
         return self.username
 
     def draft_collections(self):
-        if Collection.objects.get(creator=self, published_date__isnull=True):
+        if Collection.objects.filter(creator=self, published_date__isnull=True).count() > 0:
             return True
         return False
 
@@ -150,6 +150,13 @@ class ReportType(models.Model):
 
     def __str__(self):
         return self.type
+
+    def save(self, *args, **kwargs):
+        cursor = connection.cursor()
+        cursor.execute("BEGIN")
+        cursor.execute("CALL insert_reporttype({})".format(self.type))
+        cursor.execute("COMMIT")
+        return self
 
 
 class PostReport(models.Model):
