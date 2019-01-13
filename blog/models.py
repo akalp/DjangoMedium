@@ -145,6 +145,7 @@ class Comment(models.Model):
 
 
 class ReportType(models.Model):
+    id = models.IntegerField(primary_key=True, serialize=False, verbose_name='ID')
     type = models.CharField(max_length=250, blank=False)
 
     def __str__(self):
@@ -152,6 +153,7 @@ class ReportType(models.Model):
 
 
 class PostReport(models.Model):
+    id = models.IntegerField(primary_key=True, serialize=False, verbose_name='ID')
     class Meta:
         unique_together = (('user', 'post'),)
 
@@ -165,6 +167,7 @@ class PostReport(models.Model):
 
 
 class UserReport(models.Model):
+    id = models.IntegerField(primary_key=True, serialize=False, verbose_name='ID')
     class Meta:
         unique_together = (('reporter', 'reported'),)
 
